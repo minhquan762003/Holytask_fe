@@ -1,0 +1,23 @@
+<div class="bg-light w-100 h-100 shadow-sm rounded p-4">
+  <!-- Tiêu đề của trang -->
+  <h1 class="text-center mb-5">
+    {{ sharedService.getTranslateService().translate('label.bangdieukhang') }}
+  </h1>
+
+  <!-- Phần sự kiện và giáo dân -->
+  <div class="row justify-content-between mb-5">
+    <div class="col-md-5">
+      <app-event></app-event>
+    </div>
+
+    <div class="col-md-5 text-end">
+      <app-parishioner></app-parishioner>
+    </div>
+  </div>
+
+  <!-- Phần lịch -->
+  <div class="mt-4">
+    <h2>{{ sharedService.getTranslateService().translate('label.lich') }}</h2>
+    <app-calendar></app-calendar>
+  </div>
+</div>

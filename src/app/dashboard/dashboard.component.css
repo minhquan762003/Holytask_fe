@@ -1,0 +1,25 @@
+.calendar {
+  margin-top: 20px;
+}
+
+.calendar .row {
+  margin-bottom: 10px;
+}
+
+.calendar .col {
+  padding: 5px;
+}
+
+.calendar .col-2 {
+  text-align: center;
+}
+
+.calendar .bg-primary {
+  background-color: #007bff;
+  color: white;
+}
+
+.calendar .col-2 span {
+  display: block;
+  padding: 5px;
+}

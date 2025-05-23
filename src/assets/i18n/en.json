@@ -1,0 +1,21 @@
+{
+
+  "label.suvuthienglieng": "Holy task",
+  "label.giaodan": "Parishloners",
+  "label.tailieu": "Documents",
+  "label.baocao": "Reports",
+  "label.bangdieukhang": "Dashboard",
+  "label.lich": "Schedule",
+  "label.sukiensaptoi": "Upcoming Events",
+  "label.danhsachgiaodan": "List of parishioners",
+  "label.themgiaodan": "More parishioners",
+  "label.chonnhom": "Select a group ",
+  "label.loc": "Filter",
+  "label.placeholder.timtheoten": "Search by name...",
+  "label.username": "Username",
+  "label.password": "Password",
+  "label.placeholder.username": "Enter username",
+  "label.placeholder.password": "Enter password"
+
+
+}

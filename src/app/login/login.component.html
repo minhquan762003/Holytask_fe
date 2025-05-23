@@ -1,0 +1,56 @@
+<div class="d-flex justify-content-center align-items-center" style="height: 100vh;">
+  <div class="card shadow-lg p-4 rounded-4" style="max-width: 400px; width: 100%;">
+    <div class="card-body">
+      <h4 class="text-center mb-4">
+        <i class="bi bi-person-lock text-primary me-2"></i>
+        Đăng nhập vào hệ thống
+      </h4>
+
+      <!-- Form Đăng nhập -->
+      <div *ngIf="error == 1" class="error alert alert-danger mt-3"> {{ sharedService.getErrorMessageWithNamespace(sharedService.getTranslateService().translate('button.dangnhap')) }} </div>
+      <form #userform="ngForm" (ngSubmit)="login(userform.value)" novalidate>
+        <!-- username -->
+        <div>
+          <div class="mb-3">
+            <label for="username" class="form-label">{{sharedService.getTranslateService().translate('label.username')}}</label>
+            <input type="username" class="form-control" name="username" id="username" [placeholder]="sharedService.getTranslateService().translate('label.placeholder.username')"  required ngModel>
+          </div>
+          <div *ngIf="userform.submitted || userform.controls['username']?.touched">
+            <div *ngIf="userform.controls['username']?.errors?.['required']"
+                 class="text-danger float-start">
+              {{ sharedService.getTranslateService().translate('label.username.batbuoc') }}
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Mật khẩu -->
+        <div class="mb-3">
+          <label for="password" class="form-label">Mật khẩu</label>
+          <input type="password" class="form-control" id="password" name="password" [placeholder]="sharedService.getTranslateService().translate('text.login.nhapmatkhau')" required ngModel>
+        </div>
+
+        <!-- Quên mật khẩu -->
+        <div class="mb-3 d-flex justify-content-between align-items-center">
+          <a href="#" class="text-muted">Quên mật khẩu?</a>
+          <div>
+            <label class="form-check-label">
+              <input type="checkbox" class="form-check-input" name="isRemember" [(ngModel)]="isRemember" > Ghi nhớ đăng nhập
+            </label>
+          </div>
+        </div>
+
+        <!-- Nút đăng nhập -->
+        <button type="submit" class="btn btn-primary w-100">{{ sharedService.getTranslateService().translate('button.dangnhap') }}</button>
+      </form>
+
+      <hr class="my-4">
+
+      <!-- Đăng ký mới -->
+      <div class="text-center">
+        <p class="text-muted">Chưa có tài khoản?</p>
+        <a href="/register" class="btn btn-outline-secondary w-100">Đăng ký</a>
+      </div>
+    </div>
+  </div>
+</div>

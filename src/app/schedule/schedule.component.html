@@ -1,0 +1,169 @@
+<div class="card shadow rounded-4 p-4 bg-white">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h4 class="fw-bold mb-0">
+      <i class="bi bi-calendar3 text-primary me-2"></i>
+      Lịch trình hôm nay
+    </h4>
+    <button class="btn btn-sm btn-outline-primary">
+      <i class="bi bi-plus-circle me-1" data-bs-toggle="modal" data-bs-target="#addScheduleModal" (click)="this.resetInputAddSchedule()"></i> Thêm lịch
+    </button>
+  </div>
+
+  <ul class="list-group list-group-flush" *ngIf="scheduleList.length > 0">
+    <li class="list-group-item d-flex justify-content-between align-items-start border-0 px-0"
+        *ngFor="let item of scheduleList | paginate: { itemsPerPage: 5, currentPage: currentPage }">
+      <div class="ms-2 me-auto">
+        <div class="fw-semibold text-dark">{{ item.datetime | date: 'HH:mm' }} - {{ item.headline }}
+        <span class="badge text-dark rounded-pill" [ngClass]="item.class">{{ item.label }}</span>
+        </div>
+        <small class="text-muted">{{ item.address }}</small>
+      </div>
+      <div class="mt-3">
+        <button class="btn btn-sm btn-outline-secondary me-1" (click)="edit(item.id)" data-bs-toggle="modal" data-bs-target="#addScheduleModal" ><i class="bi bi-pen-fill"></i></button>
+        <button class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#deleteScheduleModal" (click)="edit(item.id)"><i class="bi bi-trash"></i></button>
+      </div>
+    </li>
+  </ul>
+  <ul class="list-group list-group-flush" *ngIf="scheduleList.length <= 0">
+    <h3 class="text-center text-success">Không có lịch nào trong ngày hôm nay!</h3>
+  </ul>
+</div>
+<!-- Phân trang -->
+<pagination-controls
+  (pageChange)="currentPage = $event"
+  previousLabel="Trước"
+  nextLabel="Sau"
+  class="mt-3 d-flex justify-content-center"
+></pagination-controls>
+
+<!-- Modal Thêm lịch -->
+<div class="modal fade" id="addScheduleModal" tabindex="-1" aria-labelledby="addScheduleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content rounded-4 shadow">
+      <div *ngIf="error == 1"
+           class="error alert alert-danger mt-3 text-center"> {{ sharedService.getTranslateService().translate('error.text.taolichkhongthanhcong') }}
+      </div>
+      <div *ngIf="error == 0"
+           class="error alert alert-success mt-3 text-center"> {{ sharedService.getTranslateService().translate('success.text.taolichthanhcong') }}
+      </div>
+      <div class="modal-header">
+        <h5 class="modal-title fw-bold" id="addScheduleModalLabel">Thêm lịch trình mới</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="mb-4">
+            <label for="eventDate" class="form-label">Ngày</label>
+            <input type="date" class="form-control" id="eventDate" [(ngModel)]="schedule.date" name="eventDate"
+                   (ngModelChange)="validateDateTime()" required #eventDateRef="ngModel">
+            <div *ngIf="eventDateRef.invalid && eventDateRef.touched && eventDateRef.errors?.['required']"
+                 class="text-danger  text-center">
+              {{ sharedService.getTranslateService().translate('label.date.batbuoc') }}
+            </div>
+            <div *ngIf="dateError" class="text-danger text-center">
+              {{ dateError }}
+            </div>
+          </div>
+
+          <div class="mb-4">
+            <label for="eventTime" class="form-label">Thời gian</label>
+            <input type="time" class="form-control" id="eventTime" [(ngModel)]="schedule.time"
+                   (ngModelChange)="validateDateTime()" name="eventTime" required #evemtTimeRef="ngModel">
+            <div *ngIf="evemtTimeRef.invalid && evemtTimeRef.touched && evemtTimeRef.errors?.['required']"
+                 class="text-danger  text-center">
+              {{ sharedService.getTranslateService().translate('label.time.batbuoc') }}
+            </div>
+            <div *ngIf="timeError" class="text-danger text-center">
+              {{ timeError }}
+            </div>
+          </div>
+          <div class="mb-3">
+            <label for="headline" class="form-label">Tiêu đề</label>
+            <input type="text" class="form-control" id="headline" [(ngModel)]="schedule.headline" name="eventTitle"
+                   #eventTitleRef="ngModel"
+                   required
+            >
+            <div *ngIf="eventTitleRef.invalid && eventTitleRef.touched && eventTitleRef.errors?.['required']"
+                 class="text-danger  text-center">
+              {{ sharedService.getTranslateService().translate('label.headline.batbuoc') }}
+            </div>
+          </div>
+          <div class="mb-3">
+            <label for="eventLocation" class="form-label">Địa điểm</label>
+            <input type="text" class="form-control" id="eventLocation" [(ngModel)]="schedule.address"
+                   name="eventLocation" required #eventLocationRef="ngModel">
+            <div *ngIf="eventLocationRef.invalid && eventLocationRef.touched && eventLocationRef.errors?.['required']"
+                 class="text-danger  text-center">
+              {{ sharedService.getTranslateService().translate('label.address.batbuoc') }}
+            </div>
+          </div>
+          <div class="mb-3">
+            <label for="eventNotes" class="form-label">Ghi chú</label>
+            <input type="text" class="form-control" id="eventNotes" [(ngModel)]="schedule.notes" name="eventNotes">
+          </div>
+          <div class="mb-3">
+            <label for="eventType" class="form-label">Loại</label>
+            <select class="form-select"
+                    id="eventType"
+                    [(ngModel)]="schedule.visitType"
+                    name="eventType"
+                    required
+                    #eventTypeRef="ngModel">
+              <option value="-1" disabled selected>-- Chọn loại sự kiện --</option>
+              <option value="SICK">Thăm bệnh</option>
+              <option value="BLESSING">Ban phước</option>
+              <option value="CONVENE">Họp</option>
+              <option value="CONFESSION">Giải tội</option>
+              <option value="WEDDING">Đám cưới</option>
+            </select>
+
+            <div *ngIf="(eventTypeRef.invalid || schedule.visitType === '-1') && eventTypeRef.touched"
+                 class="text-danger text-center">
+              {{ sharedService.getTranslateService().translate('label.visittype.batbuoc') }}
+            </div>
+
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+        <button
+          type="button"
+          class="btn btn-primary"
+          (click)="saveSchedule()">
+          Lưu
+        </button>
+
+      </div>
+    </div>
+  </div>
+
+</div>
+
+
+
+<!-- delete-schedule-modal.component.html -->
+<div class="modal fade" tabindex="-1" role="dialog" id="deleteScheduleModal">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div *ngIf="error == 1"
+           class="error alert alert-danger mt-3 text-center"> Xóa thất bại
+      </div>
+      <div class="modal-header">
+        <h5 class="modal-title">Xác nhận xóa lịch trình</h5>
+      </div>
+      <div class="modal-body">
+        <p>Bạn có chắc chắn muốn xóa lịch trình <strong>{{ schedule.headline }}</strong> vào ngày <strong>{{ schedule.date }}</strong> lúc <strong>{{ schedule.time }}</strong> không?</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+        <button type="button" class="btn btn-danger" (click)="delete(idVisit)"  data-bs-dismiss="modal">Xóa</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+

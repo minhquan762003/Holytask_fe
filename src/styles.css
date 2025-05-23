@@ -1,1 +1,49 @@
-/* You can add global styles to this file, and also import other style files */
+/*!* Thêm tùy chỉnh cho toast *!*/
+.custom-toast {
+  background-color: #f8d7da !important; /* Màu nền */
+  color: #721c24 !important; /* Màu chữ */
+  border: 1px solid #f5c6cb !important; /* Đường viền */
+  border-radius: 5px; /* Bo góc */
+  padding: 15px; /* Padding */
+}
+
+.toast-title {
+  font-weight: bold; /* Làm đậm tiêu đề */
+}
+
+.toast-message {
+  font-style: italic; /* Chữ nghiêng cho nội dung */
+}
+
+/*!* Cung cấp thêm hiệu ứng cho nút đóng *!*/
+/*.toast-close-button {*/
+/*  color: #721c24 !important;*/
+/*  font-weight: bold;*/
+/*  float: right;*/
+
+/*  border-radius: 10px;*/
+/*}*/
+
+.toast-container {
+  position: fixed;
+  z-index: 9999;
+}
+
+.toast-bottom-right {
+  bottom: 20px;
+  right: 20px;
+}
+
+.toast-bottom-left {
+  bottom: 20px;
+  left: 20px;
+}
+
+.custom-toast1 {
+  background-color: #d4edda !important; /* Màu nền xanh nhạt */
+  color: #155724 !important;            /* Màu chữ xanh đậm */
+  border: 1px solid #c3e6cb !important; /* Đường viền xanh */
+  border-radius: 5px;                   /* Bo góc */
+  padding: 15px;                        /* Padding */
+}
+

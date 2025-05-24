@@ -3,6 +3,7 @@ import {User} from "../model/User";
 import {SharedService} from "../shared-service.service";
 import {jwtDecode} from 'jwt-decode';
 import {PriestprofilesService} from "./priestprofiles.service";
+import {WebSocketService} from "./web-socket.service";
 
 @Injectable({
   providedIn: 'root',
@@ -12,6 +13,7 @@ export class AuthService {
   sharedService = inject(SharedService);
   private currentUser: User | undefined;
   private isRemember: boolean = false;
+  private webSocketService = inject(WebSocketService)
   constructor() {
   }
 
@@ -138,6 +140,7 @@ export class AuthService {
       this.setIsLoggedIn(0);
       this.currentUser = undefined;
       window.location.href = '/login';
+      this.webSocketService.disconnect();
 
     }
   }

@@ -2,7 +2,7 @@ import {inject, Injectable} from '@angular/core';
 import {Client, IMessage} from "@stomp/stompjs";
 import {Observable, Subject} from "rxjs";
 import SockJS from "sockjs-client";
-import {PriestprofilesService} from "./service/priestprofiles.service";
+import {PriestprofilesService} from "./priestprofiles.service";
 
 @Injectable({
   providedIn: 'root'
@@ -10,21 +10,20 @@ import {PriestprofilesService} from "./service/priestprofiles.service";
 export class WebSocketService {
   private stompClient: Client;
   private messageSubject = new Subject<any>();
-  private priestProfileService = inject(PriestprofilesService);
+
   constructor() {
     this.stompClient = new Client({
       webSocketFactory: () => new SockJS('http://localhost:8080/ws'),
       reconnectDelay: 5000,
       heartbeatIncoming: 4000,
       heartbeatOutgoing: 4000,
-      debug: (str) => {
-        console.log('[STOMP DEBUG]', str);
-      }
+      debug: (str) => console.log('[STOMP DEBUG]', str)
     });
+  }
 
+  connect(priestId: number): void {
     this.stompClient.onConnect = () => {
-      const priestId = this.priestProfileService.getPriestId();
-      console.log(priestId);
+      console.log("✅ WebSocket connected. Subscribing with priestId:", priestId);
       this.stompClient.subscribe(`/topic/schedule/${priestId}`, (message: IMessage) => {
         this.messageSubject.next(JSON.parse(message.body));
       });
@@ -34,9 +33,7 @@ export class WebSocketService {
       console.error('STOMP error:', frame.headers['message']);
       console.error('Details:', frame.body);
     };
-  }
 
-  connect(): void {
     this.stompClient.activate();
   }
 
@@ -48,3 +45,4 @@ export class WebSocketService {
     this.stompClient.deactivate();
   }
 }
+

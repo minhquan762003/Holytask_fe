@@ -1,7 +1,7 @@
 
     <div class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 text-white min-vh-100 d-flex flex-column" style="height: 100%">
         <div style="width: 250px">
-            <a href="/dashboard" class="d-flex align-items-center pb-3 mb-md-0 me-md-auto text-white text-decoration-none">
+            <a [routerLink]="['/dashboard']" class="d-flex align-items-center pb-3 mb-md-0 me-md-auto text-white text-decoration-none">
             <span
                     class="fs-5 d-none d-sm-inline"><h1>{{ sharedService.getTranslateService().translate('label.suvuthienglieng') }}</h1></span>
             </a>
@@ -14,7 +14,7 @@
             <!--            </a>-->
             <!--          </li>-->
             <li>
-                <a href="#" [routerLink]="['/dashboard']" data-bs-toggle="collapse" class="nav-link px-0 align-middle  btn btn-outline-light "
+                <a [routerLink]="['/dashboard']"   data-bs-toggle="collapse" class="nav-link px-0 align-middle  btn btn-outline-light "
                    style="width: 280px">
                     <i class="fs-4 bi-speedometer2"></i> <span
                         class="ms-1 d-none d-sm-inline">{{ sharedService.getTranslateService().translate('label.bangdieukhang') }}</span>
@@ -29,25 +29,25 @@
                 <!--            </ul>-->
             </li>
             <li>
-                <a href="/schedule" class="nav-link px-0 align-middle btn btn-outline-ligh btn btn-outline-light "
+                <a href="#" [routerLink]="['/schedule']" class="nav-link px-0 align-middle btn btn-outline-ligh btn btn-outline-light "
                    style="width: 280px">
                     <i class="fs-4 bi-table"></i> <span
                         class="ms-1 d-none d-sm-inline">{{ sharedService.getTranslateService().translate('label.lich') }}</span></a>
             </li>
             <li>
-                <a href="/parishioner"  class="nav-link px-0 align-middle btn btn-outline-light " style="width: 280px">
+                <a href="#"  [routerLink]="['/parishioner']" class="nav-link px-0 align-middle btn btn-outline-light " style="width: 280px">
                     <i class="fs-4 bi-people"></i> <span
                         class="ms-1 d-none d-sm-inline">{{ sharedService.getTranslateService().translate('label.giaodan') }}</span>
                 </a>
             </li>
             <li>
-                <a href="/document"  class="nav-link px-0 align-middle btn btn-outline-light " style="width: 280px">
+                <a href="#"  [routerLink]="['/document']" class="nav-link px-0 align-middle btn btn-outline-light " style="width: 280px">
                     <i class="bi bi-file-earmark-fill"></i> <span
                         class="ms-1 d-none d-sm-inline">{{ sharedService.getTranslateService().translate('label.tailieu') }}</span>
                 </a>
             </li>
             <li>
-                <a href="/report"  class="nav-link px-0 align-middle btn btn-outline-light " style="width: 280px">
+                <a href="#" [routerLink]="['/report']" class="nav-link px-0 align-middle btn btn-outline-light " style="width: 280px">
                     <i class="bi bi-bar-chart-fill"></i> <span
                         class="ms-1 d-none d-sm-inline">{{ sharedService.getTranslateService().translate('label.baocao') }}</span>
                 </a>

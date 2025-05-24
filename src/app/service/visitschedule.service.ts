@@ -35,15 +35,7 @@ export class VisitscheduleService {
     return this.sharedService.getHttp().get(`${this.sharedService.getBaseUrl()}/visitSchedule/idVisit/${id}`, {headers})
   }
 
-  sendEmail(idVisit: number, email: any) {
-    const headers = this.createHeaders();
-    const body = { email, idVisit };
-    return this.sharedService.getHttp().post(
-      `http://localhost:8080/api/visitSchedule/sendEmail`,
-      body,
-      { headers }
-    );
-  }
+
 
   updateVisitSchedule(datamodel:any ,idVisit:number){
     const headers = this.createHeaders();

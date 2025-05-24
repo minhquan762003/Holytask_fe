@@ -6,7 +6,7 @@ import {SharedService} from "../shared-service.service";
 import {VisitscheduleService} from "../service/visitschedule.service";
 import {ScheduleItem} from "../model/schedule-item";
 import {ToastrModule, ToastrService} from "ngx-toastr";
-import {WebSocketService} from "../web-socket.service";
+import {WebSocketService} from "../service/web-socket.service";
 
 @Component({
   selector: 'app-schedule',
@@ -44,51 +44,12 @@ export class ScheduleComponent implements OnInit {
   };
   dataEdit: any;
 
-  private notified = new Set<number>();
-
   ngOnInit(): void {
     this.getPriestProfilesByUserId();
-    // this.startScheduleWatcher();
-    this.webSocketService.connect();
-    this.webSocketService.getMessages().subscribe(notification => {
-      console.log(notification);
-      if (!this.notified.has(notification.scheduleId)) {
-        this.notified.add(notification.scheduleId);
 
-        this.toastr.info(`🔔 ${notification.message}`, notification.headline, {
-          timeOut: 10000,
-          positionClass: 'toast-bottom-right',
-          progressBar: true,
-        });
-
-        const audio = new Audio('/assets/notify.mp3');
-        audio.play().catch(err => console.warn('Không thể phát âm thanh:', err));
-      }
-    });
   }
 
-  notifySchedule(item: any) {
-    this.toastr.info(
-      `🔔 Còn 5 phút nữa đến giờ công việc!`,                  // Nội dung thông báo
-      `${item.headline}`,             // Tiêu đề
-      {
-        timeOut: 10000,
-        positionClass: 'toast-bottom-right',
-        toastClass: 'custom-toast',
-        progressBar: true,
-        progressAnimation: 'increasing',
-      }
-    );
-
-    // Optional: phát chuông
-    const audio = new Audio('/assets/notify.mp3');
-    audio.play().catch(err => console.warn('Không thể phát âm thanh:', err));
-  }
-
-  ngOnDestroy(): void {
-    this.webSocketService.disconnect();
-  }
-  constructor(private toastr: ToastrService, private webSocketService: WebSocketService) {
+  constructor() {
   }
 
   getPriestProfilesByUserId() {
@@ -219,26 +180,6 @@ export class ScheduleComponent implements OnInit {
       }
     }
   }
-
-  startScheduleWatcher() {
-    setInterval(() => {
-      const now = Date.now();                  // milliseconds hiện tại
-
-      this.scheduleList.forEach(item => {
-        const taskTime = new Date(item.datetime).getTime();   // ms của lịch hẹn
-        const diffMin = (taskTime - now) / 60_000;           // chênh lệch phút
-
-        // Còn từ 0 đến < 5 phút và chưa thông báo
-        if (diffMin >= 0 && diffMin < 5 && !this.notified.has(item.id)) {
-          this.notifySchedule(item);
-          this.visitscheduleService.sendEmail(item.id, this.authService.getCurrentUser()?.email).subscribe();
-          this.notified.add(item.id);          // đánh dấu đã nhắc
-        }
-      });
-    }, 60_000); // kiểm tra mỗi phút
-    int
-  }
-
 
 
   edit(id: number) {

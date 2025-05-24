@@ -33,7 +33,4 @@ export class PriestprofilesService {
     return this.sharedService.getHttp().get(`${this.sharedService.getBaseUrl()}/priestProfile/userId/${userId}`, {headers});
   }
 
-
-
-
 }

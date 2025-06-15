@@ -47,3 +47,20 @@
   padding: 15px;                        /* Padding */
 }
 
+
+.success-toast {
+  background-color: #d4edda !important; /* Màu nền xanh nhạt */
+  color: #155724 !important;            /* Màu chữ xanh đậm */
+  border: 1px solid #c3e6cb !important; /* Đường viền xanh */
+  border-radius: 5px;                   /* Bo góc */
+  padding: 15px;                        /* Padding */
+}
+
+.error-toast {
+  background-color: #f8d7da !important; /* Màu nền */
+  color: #721c24 !important; /* Màu chữ */
+  border: 1px solid #f5c6cb !important; /* Đường viền */
+  border-radius: 5px; /* Bo góc */
+  padding: 15px; /* Padding */
+}
+

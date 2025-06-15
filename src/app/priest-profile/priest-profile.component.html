@@ -2,10 +2,13 @@
   <div class="row">
     <!-- Avatar & Info chính -->
     <div class="col-md-4 text-center">
-      <img src="https://th.bing.com/th/id/OIF.khbXsDsoxazNSD7Zeon8Kg?rs=1&pid=ImgDetMain" alt="Ảnh Cha Xứ" class="rounded-circle img-fluid mb-3" />
-      <h3>Cha Nguyễn Văn A</h3>
-      <p class="text-muted">Cha Xứ Giáo xứ Tân Phú</p>
-      <button class="btn btn-primary btn-sm mb-3" data-bs-toggle="modal" data-bs-target="#editProfileModal">Chỉnh sửa hồ sơ</button>
+      <img [src]="userData?.profilePictureUrl" alt="Ảnh Cha Xứ" class="rounded-circle img-fluid mb-3"
+           style="width: 200px"/>
+      <h3>{{ priestProfile?.fullName }}</h3>
+      <p class="text-muted">{{ parishData?.name }}</p>
+      <button class="btn btn-primary btn-sm mb-3" data-bs-toggle="modal" data-bs-target="#editProfileModal"
+              (click)="edit()">Chỉnh sửa hồ sơ
+      </button>
     </div>
 
     <!-- Thông tin chi tiết -->
@@ -16,37 +19,18 @@
         </div>
         <div class="card-body">
           <dl class="row">
-            <dt class="col-sm-4">Ngày sinh:</dt>
-            <dd class="col-sm-8">01/01/1970</dd>
+            <dt class="col-sm-4">Ngày truyền chức chức linh mục:</dt>
+            <dd class="col-sm-8"> {{ priestProfile?.ordinationDate | date: 'dd-MM-yyyy' }}</dd>
 
             <dt class="col-sm-4">Email:</dt>
-            <dd class="col-sm-8">cha.nguyenvan.com</dd>
+            <dd class="col-sm-8">{{ userData?.email }}</dd>
 
             <dt class="col-sm-4">Số điện thoại:</dt>
-            <dd class="col-sm-8">0988 123 456</dd>
+            <dd class="col-sm-8">{{ formatPhoneNumber(userData?.phoneNumber) }}</dd>
 
             <dt class="col-sm-4">Địa chỉ:</dt>
-            <dd class="col-sm-8">Số 10, Đường Lê Lợi, Quận 1, TP. HCM</dd>
+            <dd class="col-sm-8">{{ parishData?.location }}</dd>
           </dl>
-        </div>
-      </div>
-
-      <div class="card shadow-sm mt-4">
-        <div class="card-header bg-success text-white">
-          <h5 class="mb-0">Lịch mục vụ</h5>
-        </div>
-        <div class="card-body">
-          <ul class="list-group">
-            <li class="list-group-item">
-              <strong>Thánh lễ Chủ nhật:</strong> 7:00 AM, 9:00 AM, 11:00 AM
-            </li>
-            <li class="list-group-item">
-              <strong>Giờ cầu nguyện:</strong> 18:00 - 19:00 Thứ 2 - Thứ 6
-            </li>
-            <li class="list-group-item">
-              <strong>Thăm giáo dân:</strong> Thứ 7 hàng tuần
-            </li>
-          </ul>
         </div>
       </div>
 
@@ -62,86 +46,128 @@
 
 <!-- Modal chỉnh sửa thông tin Cha Xứ -->
 <!-- Modal chỉnh sửa thông tin Cha Xứ có sửa ảnh đại diện -->
-<div class="modal fade" id="editProfileModal" tabindex="-1" aria-labelledby="editProfileModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg">
-    <div class="modal-content">
-      <form id="editProfileForm" enctype="multipart/form-data">
-        <div class="modal-header">
-          <h5 class="modal-title" id="editProfileModalLabel">Chỉnh sửa thông tin Cha Xứ</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
-        </div>
-        <div class="modal-body">
-          <!-- Phần chọn và xem trước ảnh đại diện -->
-          <div class="mb-3 row align-items-center">
-            <label for="inputAvatar" class="col-sm-3 col-form-label">Ảnh đại diện</label>
-            <div class="col-sm-9 d-flex align-items-center gap-3">
-              <img id="avatarPreview" src="https://via.placeholder.com/100" alt="Ảnh đại diện" class="rounded-circle" style="width:100px; height:100px; object-fit: cover; border: 1px solid #ccc;" />
-              <input class="form-control" type="file" id="inputAvatar" name="avatar" accept="image/*" />
+<form  id="editProfileForm" #editProfileForm="ngForm" enctype="multipart/form-data">
+  <div class="modal fade" id="editProfileModal" tabindex="-1" aria-labelledby="editProfileModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="editProfileModalLabel">Chỉnh sửa thông tin Cha Xứ</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
+          </div>
+          <div class="modal-body">
+            <!-- Phần chọn và xem trước ảnh đại diện -->
+            <div class="mb-3 row align-items-center">
+              <label for="inputAvatar" class="col-sm-3 col-form-label">Ảnh đại diện</label>
+              <div class="col-sm-9 d-flex align-items-center gap-3">
+                <img
+                  [src]="avatarPreviewUrl || dataEdit.avatar "
+                  alt="Ảnh đại diện"
+                  class="rounded-circle"
+                  style="width:100px; height:100px; object-fit: cover; border: 1px solid #ccc;"
+                >
+                <input
+                  class="form-control"
+                  type="file"
+                  id="inputAvatar"
+                  name="avatar"
+                  accept="image/*"
+                  (change)="onAvatarSelected($event)"
+                />
+
+              </div>
+            </div>
+
+            <div class="mb-3 row">
+              <label for="inputName" class="col-sm-3 col-form-label">Họ và tên</label>
+              <div class="col-sm-9">
+                <input type="text" class="form-control" id="inputName" name="name" [(ngModel)]="dataEdit.fullName"
+                       required/>
+              </div>
+            </div>
+
+            <div class="mb-3 row">
+              <label for="inputBirthday" class="col-sm-3 col-form-label">Ngày truyền chức</label>
+              <div class="col-sm-9">
+                <input type="date" class="form-control" id="inputBirthday" name="birthday"
+                       [(ngModel)]="dataEdit.ordinationDate" required/>
+              </div>
+            </div>
+
+            <div class="mb-3 row">
+              <label for="inputEmail" class="col-sm-3 col-form-label">Email: </label>
+              <div  class="col-sm-9">
+                <input
+                  type="email"
+                  class="form-control"
+                  id="inputEmail"
+                  name="email"
+                  [(ngModel)]="dataEdit.email"
+                  required
+                  pattern="^[a-zA-Z0-9._%+-]+@gmail\.com$"
+                  #email="ngModel"
+                />
+                <div *ngIf="email.invalid" class="text-danger">
+                  <div *ngIf="email.errors?.['required']">Email là bắt buộc.</div>
+                  <div *ngIf="email.errors?.['pattern']">Chỉ chấp nhận địa chỉ Gmail hợp lệ.</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="mb-3 row">
+              <label for="inputPhone" class="col-sm-3 col-form-label">Số điện thoại</label>
+              <div class="col-sm-9">
+                <input
+                  type="tel"
+                  class="form-control"
+                  id="inputPhone"
+                  name="phone"
+                  [(ngModel)]="dataEdit.phone"
+                  required
+                  pattern="^0\d{9}$"
+                  #phoneRef="ngModel"
+                />
+                <div *ngIf="phoneRef.invalid && phoneRef.touched" class="text-danger">
+<!--                  <div *ngIf="phoneRef.errors?.['required']">Số điện thoại là bắt buộc.</div>-->
+                  <div *ngIf="phoneRef.errors?.['pattern']">Số điện thoại không hợp lệ. Vui lòng nhập 10 chữ số bắt đầu bằng 0.</div>
+                </div>
+
+
+              </div>
+            </div>
+
+            <div class="mb-3 row">
+              <label for="inputPhone" class="col-sm-3 col-form-label">Giáo xứ</label>
+              <div class="col-sm-9">
+                <select
+                  class="form-select"
+                  [(ngModel)]="dataEdit.parishId"
+                  name="parish"
+                  (change)="onSelectParish($event)"
+                >
+                  <option [ngValue]="undefined" disabled hidden>-- Chọn giáo xứ --</option>
+                  <option *ngFor="let parish of lstParish" [ngValue]="parish.id">{{ parish.name }}</option>
+                </select>
+              </div>
+            </div>
+
+
+            <div class="mb-3 row">
+              <label for="inputAddress" class="col-sm-3 col-form-label">Địa chỉ</label>
+              <div class="col-sm-9">
+              <textarea class="form-control" id="inputAddress" name="address" rows="2" required
+                        [(ngModel)]="dataEdit.address"></textarea>
+              </div>
             </div>
           </div>
 
-          <div class="mb-3 row">
-            <label for="inputName" class="col-sm-3 col-form-label">Họ và tên</label>
-            <div class="col-sm-9">
-              <input type="text" class="form-control" id="inputName" name="name" value="Cha Nguyễn Văn A" required />
-            </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+            <button type="button" class="btn btn-primary" [disabled]="editProfileForm.invalid" (click)="save()">Lưu thay đổi</button>
           </div>
-
-          <div class="mb-3 row">
-            <label for="inputBirthday" class="col-sm-3 col-form-label">Ngày sinh</label>
-            <div class="col-sm-9">
-              <input type="date" class="form-control" id="inputBirthday" name="birthday" value="1970-01-01" required />
-            </div>
-          </div>
-
-          <div class="mb-3 row">
-            <label for="inputEmail" class="col-sm-3 col-form-label">Email</label>
-            <div class="col-sm-9">
-              <input type="email" class="form-control" id="inputEmail" name="email" value="cha.nguyenvana@example.com" required />
-            </div>
-          </div>
-
-          <div class="mb-3 row">
-            <label for="inputPhone" class="col-sm-3 col-form-label">Số điện thoại</label>
-            <div class="col-sm-9">
-              <input type="tel" class="form-control" id="inputPhone" name="phone" value="0988123456" required />
-            </div>
-          </div>
-
-          <div class="mb-3 row">
-            <label for="inputAddress" class="col-sm-3 col-form-label">Địa chỉ</label>
-            <div class="col-sm-9">
-              <textarea class="form-control" id="inputAddress" name="address" rows="2" required>Số 10, Đường Lê Lợi, Quận 1, TP. HCM</textarea>
-            </div>
-          </div>
-        </div>
-
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
-          <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
-        </div>
-      </form>
+      </div>
     </div>
   </div>
-</div>
+</form>
 
-<script>
-  // Preview ảnh đại diện khi chọn file mới
-  const inputAvatar = document.getElementById('inputAvatar');
-  const avatarPreview = document.getElementById('avatarPreview');
 
-  inputAvatar.addEventListener('change', function () {
-    const file = this.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = function (e) {
-        avatarPreview.src = e.target.result;
-      };
-      reader.readAsDataURL(file);
-    } else {
-      // Nếu bỏ chọn file thì giữ ảnh mặc định hoặc ảnh cũ
-      avatarPreview.src = 'https://via.placeholder.com/100';
-    }
-  });
-</script>
 

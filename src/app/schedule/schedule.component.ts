@@ -4,9 +4,9 @@ import {AuthService} from "../service/auth.service";
 import {PriestprofilesService} from "../service/priestprofiles.service";
 import {SharedService} from "../shared-service.service";
 import {VisitscheduleService} from "../service/visitschedule.service";
-import {ScheduleItem} from "../model/schedule-item";
 import {ToastrModule, ToastrService} from "ngx-toastr";
 import {WebSocketService} from "../service/web-socket.service";
+import {ScheduleItem} from "../model/interface-res";
 
 @Component({
   selector: 'app-schedule',

@@ -20,7 +20,14 @@
       <tbody>
       <tr *ngFor="let week of weeks">
         <td *ngFor="let day of week">
-          <button class="btn btn-outline-secondary border-0 p-2" (click)="onDayClick(day)" [disabled]="!day"> {{ day?.getDate() || '' }}</button>
+          <button
+            class="btn btn-outline-secondary border-0 p-2"
+            [ngClass]="{'btn-secondary': isSelected(day)}"
+            [style]="{'color': isSelected(day)? 'white': ''}"
+            (click)="onDayClick(day)"
+            [disabled]="!day">
+            {{ day?.getDate() || '' }}
+          </button>
         </td>
       </tr>
       </tbody>

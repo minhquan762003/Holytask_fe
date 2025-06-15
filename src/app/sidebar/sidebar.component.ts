@@ -2,6 +2,8 @@ import {Component, inject} from '@angular/core';
 import {SharedModule} from "../shared/shared.module";
 import {SharedService} from "../shared-service.service";
 import {AuthService} from "../service/auth.service";
+import {User} from "../model/interface-res";
+
 
 
 @Component({
@@ -14,7 +16,11 @@ import {AuthService} from "../service/auth.service";
 export class SidebarComponent {
   sharedService = inject(SharedService);
   authService = inject(AuthService);
+  userData:User|undefined;
+  data :any;
   constructor() {
+    this.data = this.authService.getCurrentUser();
+    this.userData = this.data as User;
   }
 
   changeLanguage(event: any) {

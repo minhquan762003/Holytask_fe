@@ -1,5 +1,6 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, inject, OnInit} from '@angular/core';
 import {SharedModule} from "../../shared/shared.module";
+import {SharedService} from "../../shared-service.service";
 
 @Component({
   selector: 'app-calendar',
@@ -11,6 +12,8 @@ import {SharedModule} from "../../shared/shared.module";
 export class CalendarComponent implements OnInit{
   currentDate: Date = new Date();
   weeks: any[] = [];
+  selectedDate: Date = new Date();
+  sharedService = inject(SharedService);
   ngOnInit() {
     this.generateCalendar();
   }
@@ -69,7 +72,21 @@ export class CalendarComponent implements OnInit{
   }
 
   onDayClick(date:Date){
-    console.log(date);
-    return date;
+    const rawDate = new Date(date);
+
+    const formattedDate = rawDate.toLocaleDateString('vi-VN'); // Output: "17/06/2025"
+    console.log(formattedDate);
+    rawDate.getDay();
+    if (date) {
+      this.selectedDate = date;
+    }
+    this.sharedService.emitDayClicked(formattedDate);
+  }
+
+  isSelected(day: Date): boolean {
+    return day && this.selectedDate &&
+      day.getDate() === this.selectedDate.getDate() &&
+      day.getMonth() === this.selectedDate.getMonth() &&
+      day.getFullYear() === this.selectedDate.getFullYear();
   }
 }

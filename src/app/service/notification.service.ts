@@ -47,7 +47,7 @@ export class NotificationService {
     const headers = this.createHeaders();
     this.sharedService.getHttp().post(
       `${this.sharedService.getBaseUrl()}/notification/ack`,
-      {scheduleId}, // ✅ gửi object đúng định dạng
+      {scheduleId},
       {headers}
     ).subscribe({
       next: () => console.log('Đã xác nhận lịch đã nhận'),

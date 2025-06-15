@@ -12,6 +12,7 @@ export class PriestprofilesService {
   private authService = inject(AuthService);
   private data:any;
   private priestId :any;
+  private imgbbApiKey = 'ea439d7bc84ed787bbf31d54f1875b81';
   constructor() { }
 
   private createHeaders(): HttpHeaders {
@@ -32,5 +33,20 @@ export class PriestprofilesService {
     const headers = this.createHeaders();
     return this.sharedService.getHttp().get(`${this.sharedService.getBaseUrl()}/priestProfile/userId/${userId}`, {headers});
   }
+
+  uploadToImgBB(base64Image: string){
+    const url = `https://api.imgbb.com/1/upload?expiration=600&key=${this.imgbbApiKey}`;
+    const formData = new FormData();
+    formData.append('image', base64Image);
+    return this.sharedService.getHttp().post(url, formData);
+  }
+
+  updateProfile(editProfile:any, userId:number){
+    const headers = this.createHeaders();
+    return this.sharedService.getHttp().post(`${this.sharedService.getBaseUrl()}/priestProfile/update/${userId}`,editProfile, {headers});
+
+  }
+
+
 
 }

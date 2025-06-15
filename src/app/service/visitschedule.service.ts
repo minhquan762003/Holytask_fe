@@ -47,5 +47,9 @@ export class VisitscheduleService {
     return this.sharedService.getHttp().delete(`${this.sharedService.getBaseUrl()}/visitSchedule/delete/${idVisit}`,{headers});
   }
 
+  getByDate(dateStr:string){
+    const headers = this.createHeaders();
+    return this.sharedService.getHttp().get(`${this.sharedService.getBaseUrl()}/visitSchedule/byDate`, {headers, params:{strDate:dateStr}}, );
+  }
 
 }

@@ -3,7 +3,7 @@
     <div class="p-6">
       <div class="flex justify-between items-center mb-4">
         <h1 class="text-2xl font-bold">{{sharedService.getTranslateService().translate('label.danhsachgiaodan')}}</h1>
-        <button class="btn btn-outline-primary">
+        <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#parishionerModal">
           + {{sharedService.getTranslateService().translate('label.themgiaodan')}}
         </button>
       </div>
@@ -11,10 +11,11 @@
       <div class="flex gap-4 mb-4">
         <input type="text" placeholder="{{sharedService.getTranslateService().translate('label.placeholder.timtheoten')}}" class="border p-2 rounded w-1/3" />
         <select class="border p-2 rounded w-1/4">
-          <option value="">-- {{ sharedService.getTranslateService().translate('label.chonnhom') }} --</option>
-          <option>Giới trẻ</option>
-          <option>Huynh đoàn</option>
-          <option>Ban lễ sinh</option>
+          <option value="">-- Chọn hội đoàn --</option>
+          <option value="3">Giới trẻ giáo xứ</option>
+          <option value="4">Huynh đoàn Đa Minh</option>
+          <option value="5">Ban bác ái</option>
+          <option value="2">Ca đoàn thiếu nhi</option>
         </select>
         <button class="bg-gray-200 px-4 py-2 rounded btn btn-outline-primary ms-3">{{sharedService.getTranslateService().translate('label.loc')}}</button>
       </div>
@@ -25,27 +26,159 @@
           <th class="p-2">Tên</th>
           <th class="p-2">Ngày sinh</th>
           <th class="p-2">Giới tính</th>
-          <th class="p-2">Nhóm</th>
+          <th class="p-2">Hội đoàn</th>
           <th class="p-2">Số điện thoại</th>
           <th class="p-2">Hành động</th>
         </tr>
         </thead>
         <tbody>
-        <tr class="border-b hover:bg-gray-50" *ngFor="let person of parishioners">
-          <td class="p-2">{{ person.name }}</td>
-          <td class="p-2">{{ person.birthDate  }}</td>
-          <td class="p-2">{{ person.gender }}</td>
-          <!--      <td class="p-2">{{ person.group }}</td>-->
-          <!--      <td class="p-2">{{ person.phone }}</td>-->
-          <td class="p-2">
-            <button class="text-blue-600 hover:underline mr-2">Chi tiết</button>
-            <button class="text-green-600 hover:underline mr-2">Sửa</button>
-            <button class="text-red-600 hover:underline">Xóa</button>
-          </td>
-        </tr>
+<!--        <tr class="border-b hover:bg-gray-50" *ngFor="let person of parishioners">-->
+<!--          <td class="p-2">{{ person.name }}</td>-->
+<!--          <td class="p-2">{{ person.birthDate  }}</td>-->
+<!--          <td class="p-2">{{ person.gender }}</td>-->
+<!--          &lt;!&ndash;      <td class="p-2">{{ person.group }}</td>&ndash;&gt;-->
+<!--          &lt;!&ndash;      <td class="p-2">{{ person.phone }}</td>&ndash;&gt;-->
+<!--          <td class="p-2">-->
+<!--            <button class="text-blue-600 hover:underline mr-2">Chi tiết</button>-->
+<!--            <button class="text-green-600 hover:underline mr-2">Sửa</button>-->
+<!--            <button class="text-red-600 hover:underline">Xóa</button>-->
+<!--          </td>-->
+<!--        </tr>-->
         </tbody>
       </table>
     </div>
   </div>
 
 </div>
+
+
+
+
+<form  id="parishionerProfileForm" #parishionerProfileForm="ngForm" enctype="multipart/form-data">
+  <div class="modal fade" id="parishionerModal" tabindex="-1" aria-labelledby="editProfileModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="editProfileModalLabel">Chỉnh sửa thông tin Cha Xứ</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
+        </div>
+        <div class="modal-body">
+          <!-- Phần chọn và xem trước ảnh đại diện -->
+          <div class="mb-3 row align-items-center">
+<!--            <label for="inputAvatar" class="col-sm-3 col-form-label">Ảnh đại diện</label>-->
+<!--            <div class="col-sm-9 d-flex align-items-center gap-3">-->
+<!--              <img-->
+<!--                [src]="avatarPreviewUrl || dataEdit.avatar "-->
+<!--                alt="Ảnh đại diện"-->
+<!--                class="rounded-circle"-->
+<!--                style="width:100px; height:100px; object-fit: cover; border: 1px solid #ccc;"-->
+<!--              >-->
+<!--              <input-->
+<!--                class="form-control"-->
+<!--                type="file"-->
+<!--                id="inputAvatar"-->
+<!--                name="avatar"-->
+<!--                accept="image/*"-->
+<!--                (change)="onAvatarSelected($event)"-->
+<!--              />-->
+
+<!--            </div>-->
+          </div>
+
+          <div class="mb-3 row">
+            <label for="inputName" class="col-sm-3 col-form-label">Họ và tên</label>
+            <div class="col-sm-9">
+              <input type="text" class="form-control" id="inputName" name="name" [(ngModel)]="parishioners.fullName"
+                     required/>
+            </div>
+          </div>
+
+          <div class="mb-3 row">
+            <label for="inputBirthday" class="col-sm-3 col-form-label">Ngày sinh:</label>
+            <div class="col-sm-9">
+              <input type="date" class="form-control" id="inputBirthday" name="birthday"
+                     [(ngModel)]="parishioners.birthDate" required/>
+            </div>
+          </div>
+
+<!--          <div class="mb-3 row">-->
+<!--            <label for="inputEmail" class="col-sm-3 col-form-label">Email: </label>-->
+<!--            <div  class="col-sm-9">-->
+<!--              <input-->
+<!--                type="email"-->
+<!--                class="form-control"-->
+<!--                id="inputEmail"-->
+<!--                name="email"-->
+<!--                [(ngModel)]="parishioners.address"-->
+<!--                required-->
+<!--                pattern="^[a-zA-Z0-9._%+-]+@gmail\.com$"-->
+<!--                #email="ngModel"-->
+<!--              />-->
+<!--              <div *ngIf="email.invalid" class="text-danger">-->
+<!--                <div *ngIf="email.errors?.['required']">Email là bắt buộc.</div>-->
+<!--                <div *ngIf="email.errors?.['pattern']">Chỉ chấp nhận địa chỉ Gmail hợp lệ.</div>-->
+<!--              </div>-->
+<!--            </div>-->
+<!--          </div>-->
+
+          <div class="mb-3 row">
+            <label for="inputPhone" class="col-sm-3 col-form-label">Số điện thoại: </label>
+            <div class="col-sm-9">
+              <input
+                type="tel"
+                class="form-control"
+                id="inputPhone"
+                name="phone"
+                [(ngModel)]="parishioners.phoneNumber"
+                required
+                pattern="^0\d{9}$"
+                #phoneRef="ngModel"
+              />
+              <div *ngIf="phoneRef.invalid && phoneRef.touched" class="text-danger">
+                <!--                  <div *ngIf="phoneRef.errors?.['required']">Số điện thoại là bắt buộc.</div>-->
+                <div *ngIf="phoneRef.errors?.['pattern']">Số điện thoại không hợp lệ. Vui lòng nhập 10 chữ số bắt đầu bằng 0.</div>
+              </div>
+
+
+            </div>
+          </div>
+
+          <div class="mb-3 row">
+            <label for="inputPhone" class="col-sm-3 col-form-label">Giáo họ:</label>
+            <div class="col-sm-9">
+              <select class="form-select" (change)="onSelectSubParish($event)" [(ngModel)]="parishioners.subParishId" name="subparishId">
+                <option [ngValue]="undefined" disabled hidden>-- Chọn giáo họ --</option>
+                <option *ngFor="let subParish of lstSubParish " [ngValue]="subParish.id" >{{subParish.name}}</option>
+              </select>
+            </div>
+          </div>
+
+
+          <div class="mb-3 row">
+            <label for="inputPhone" class="col-sm-3 col-form-label">Hội đoàn:</label>
+            <div class="col-sm-9">
+              <select class="form-select" (change)="onSelectSubParish($event)" [(ngModel)]="parishioners.parishGroupId" name="subparishId">
+                <option [ngValue]="undefined" disabled hidden>-- Chọn hội đoàn --</option>
+                <option *ngFor="let parishGroup of lstParishGroup " [ngValue]="parishGroup.id" >{{parishGroup.name}}</option>
+              </select>
+            </div>
+          </div>
+
+
+          <div class="mb-3 row">
+            <label for="inputAddress" class="col-sm-3 col-form-label">Địa chỉ</label>
+            <div class="col-sm-9">
+              <textarea class="form-control" id="inputAddress" name="address" rows="2" required
+                        [(ngModel)]="parishioners.address"></textarea>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+          <button type="button" class="btn btn-primary" [disabled]="parishionerProfileForm.invalid" >Lưu thay đổi</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>

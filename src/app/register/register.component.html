@@ -95,7 +95,7 @@
         </div>
 
         <!-- Nút đăng ký -->
-        <button type="submit" class="btn btn-primary w-100" [disabled]="registerForm.invalid">Đăng ký</button>
+        <button type="submit" class="btn btn-primary w-100" [disabled]="registerForm.invalid || password.value !== repassword.value">Đăng ký</button>
       </form>
 
       <hr class="my-4">

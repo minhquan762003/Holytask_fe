@@ -4,6 +4,7 @@ import {Router} from "@angular/router";
 import {AuthService} from "./service/auth.service";
 import {HttpClient} from "@angular/common/http";
 import {UserService} from "./service/user.service";
+import {Subject} from "rxjs";
 
 @Injectable({
   providedIn: 'root'
@@ -17,6 +18,12 @@ export class SharedService {
   private http = inject(HttpClient);
   private baseUrl = 'http://localhost:8080/api';
   private errorMessage = "";
+  private selectedDate = new Subject<string>();
+  dayClicked$ = this.selectedDate.asObservable();
+
+  emitDayClicked(dateString: string) {
+    this.selectedDate.next(dateString);
+  }
 
   getTranslateService() {
     return this.translateService;

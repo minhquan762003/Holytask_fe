@@ -48,6 +48,23 @@ export class SharedService {
     return name + this.errorMessage ;
   }
 
+  formatedDate(date: Date | string): string {
+    const parsedDate = date instanceof Date ? date : new Date(date);
+
+    if (isNaN(parsedDate.getTime())) {
+      console.error("Giá trị ngày không hợp lệ:", date);
+      return '';
+    }
+
+    const formatted = new Intl.DateTimeFormat('vi-VN', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric'
+    }).format(parsedDate);
+
+    return formatted;
+  }
+
 
 
 }

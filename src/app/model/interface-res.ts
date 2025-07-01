@@ -77,3 +77,18 @@ export interface ParishGroup{
   updatedAt?: string;
 }
 
+export interface ParishionerProfile{
+  id:number,
+  fullName:string,
+  dateOfBirth:Date,
+  address:string,
+  parishGroup:ParishGroup
+  phoneNumber:string,
+  subParish:SubParish,
+  imgUrl:string,
+  updatedUser:string,
+  createdUser:string,
+  createdAt?: string;
+  updatedAt?: string;
+}
+

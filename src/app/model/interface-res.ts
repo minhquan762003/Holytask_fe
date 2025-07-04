@@ -92,3 +92,17 @@ export interface ParishionerProfile{
   updatedAt?: string;
 }
 
+export interface Documents {
+  id: number;
+  fileName: string;
+  originalFileName: string;
+  fileType: number;
+  fileSize: number;
+  contentType: string;
+  downloadUrl: string;
+  createdUser: string;
+  createdAt: string; // hoặc Date nếu muốn định dạng thành Date object
+  description: string;
+  deleted: number;
+  priest: Priest
+}

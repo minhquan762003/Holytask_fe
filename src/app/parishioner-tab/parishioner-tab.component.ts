@@ -59,7 +59,7 @@ export class ParishionerTabComponent implements OnInit{
         this.parishId = this.priestProfile.parish?.id as number;
         console.log('Parish ID:', this.parishId);
 
-        if (this.parishId != -1) {
+        if (this.parishId != undefined && this.parishId != -1) {
           this.subparishService.getByParishId(this.parishId).subscribe(res => {
             this.data = res;
             this.data =  this.data.data;

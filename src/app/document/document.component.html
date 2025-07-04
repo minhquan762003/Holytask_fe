@@ -4,15 +4,14 @@
       <i class="bi bi-folder2-open text-primary me-2"></i>
       Tài liệu mục vụ
     </h4>
-    <button class="btn btn-sm btn-outline-primary">
+    <button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#uploadModal">
       <i class="bi bi-upload me-1"></i> Tải lên
     </button>
   </div>
 
   <div class="mb-3">
-    <input type="text" class="form-control" placeholder="Tìm kiếm tài liệu..." />
+    <input type="text" class="form-control" placeholder="Tìm kiếm tài liệu..." (change)="findDocByName($event)"/>
   </div>
-
   <div class="table-responsive">
     <table class="table table-hover align-middle">
       <thead class="table-light">
@@ -25,30 +24,112 @@
       </tr>
       </thead>
       <tbody>
-      <tr>
-        <td>Biên bản họp Hội đồng Mục vụ</td>
-        <td><span class="badge bg-secondary">Biên bản</span></td>
-        <td>03/04/2025</td>
-        <td>Cha Giuse Trần Văn B</td>
+      <tr *ngFor="let doc of lstDoc">
+        <td>{{ doc.originalFileName }}</td>
+        <td>
+          <span class="badge"
+                [ngClass]="getBadgeClass(doc.fileType)">
+            {{ getFileTypeLabel(doc.fileType) }}
+          </span>
+        </td>
+        <td>{{ doc.createdAt | date: 'dd/MM/yyyy' }}</td>
+        <td>{{ doc.priest?.fullName || 'Không rõ' }}</td>
         <td class="text-end">
-          <button class="btn btn-sm btn-outline-info me-1"><i class="bi bi-eye"></i></button>
-          <button class="btn btn-sm btn-outline-secondary me-1"><i class="bi bi-download"></i></button>
-          <button class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></button>
+          <button class="btn btn-sm btn-outline-info me-1" (click)="viewDocument(doc)">
+            <i class="bi bi-eye"></i>
+          </button>
+          <button class="btn btn-sm btn-outline-secondary me-1" (click)="downloadDoc(doc.downloadUrl, doc.originalFileName)">
+            <i class="bi bi-download"></i>
+          </button>
+
+          <button
+            class="btn btn-sm btn-outline-danger"
+            data-bs-toggle="modal"
+            data-bs-target="#deleteConfirmModal"
+            (click)="setDocToDelete(doc)"
+          >
+            <i class="bi bi-trash"></i>
+          </button>
         </td>
       </tr>
-      <tr>
-        <td>Giáo lý Rước lễ lần đầu</td>
-        <td><span class="badge bg-success">Giáo lý</span></td>
-        <td>28/03/2025</td>
-        <td>Thầy Phaolô Lê Văn C</td>
-        <td class="text-end">
-          <button class="btn btn-sm btn-outline-info me-1"><i class="bi bi-eye"></i></button>
-          <button class="btn btn-sm btn-outline-secondary me-1"><i class="bi bi-download"></i></button>
-          <button class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></button>
-        </td>
+      <tr *ngIf="lstDoc.length === 0">
+        <td colspan="5" class="text-center text-muted">Không có tài liệu nào.</td>
       </tr>
-      <!-- Add more rows as needed -->
       </tbody>
     </table>
+  </div>
+
+</div>
+
+
+
+<!-- Modal upload -->
+<div class="modal fade" id="uploadModal" tabindex="-1" aria-labelledby="uploadModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content rounded-4 shadow-sm">
+      <div class="modal-header bg-light border-0">
+        <h5 class="modal-title fw-bold" id="uploadModalLabel">
+          <i class="bi bi-upload me-2 text-primary"></i> Tải tài liệu mới
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
+      </div>
+
+      <form (ngSubmit)="uploadDocument()" [formGroup]="uploadForm" enctype="multipart/form-data">
+        <div class="modal-body">
+          <div class="mb-3 text-danger text-center" *ngIf="selectedType == -1 || !selectedFile">Vui lòng chọn tài liệu và chọn loại tài liệu</div>
+          <!-- File -->
+          <div class="mb-3">
+            <label for="file" class="form-label">Chọn tài liệu</label>
+            <input type="file" class="form-control" id="file" (change)="onFileSelected($event)" required />
+          </div>
+
+          <!-- Type -->
+          <div class="mb-3">
+            <label class="form-label">Loại tài liệu</label>
+            <select class="form-select" formControlName="fileType" required (change)="onSelectFileType($event)">
+              <option value=""  disabled hidden selected>Chọn loại</option>
+              <option [value]="1" >Biên bản</option>
+              <option [value]="2">Giáo lý</option>
+              <option [value]="3">Tài liệu khác</option>
+            </select>
+          </div>
+
+          <!-- Description -->
+          <div class="mb-3">
+            <label class="form-label">Mô tả</label>
+            <textarea class="form-control" formControlName="description" rows="3" placeholder="VD: Biên bản họp Hội đồng Mục vụ ngày 3/4/2025"></textarea>
+          </div>
+
+        </div>
+
+        <div class="modal-footer border-0">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+          <button type="submit" class="btn btn-primary" [disabled]="uploading||!selectedFile||selectedType==-1">
+            <i class="bi bi-cloud-arrow-up me-1"></i> Tải lên
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+
+
+<!-- Modal xác nhận xóa -->
+<div class="modal fade" id="deleteConfirmModal" tabindex="-1" aria-labelledby="deleteConfirmModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header bg-danger text-white">
+        <h5 class="modal-title" id="deleteConfirmModalLabel">Xác nhận xóa</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Đóng"></button>
+      </div>
+      <div class="modal-body">
+        Bạn có chắc chắn muốn xóa tài liệu {{selectedDoc?.originalFileName}} không?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+        <button type="button" class="btn btn-danger" (click)="deleteDocument()" data-bs-dismiss="modal">Xóa</button>
+      </div>
+    </div>
   </div>
 </div>

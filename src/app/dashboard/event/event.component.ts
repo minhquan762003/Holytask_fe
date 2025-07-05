@@ -3,7 +3,9 @@ import {SharedModule} from "../../shared/shared.module";
 import {SharedService} from "../../shared-service.service";
 import {start} from "@popperjs/core";
 import {VisitscheduleService} from "../../service/visitschedule.service";
-import {ScheduleItem} from "../../model/interface-res";
+import {Documents, ScheduleItem} from "../../model/interface-res";
+import {PriestprofilesService} from "../../service/priestprofiles.service";
+import {AuthService} from "../../service/auth.service";
 
 @Component({
   selector: 'app-event',
@@ -18,6 +20,9 @@ export class EventComponent implements OnInit{
   selectedDate: string = "";
   data:any;
   scheduleList: ScheduleItem[] = [];
+  priestprofilesService = inject(PriestprofilesService);
+  authService = inject(AuthService);
+  priestId:number = -1;
 
   currentPage = 1;
   itemsPerPage = 3;
@@ -47,24 +52,35 @@ export class EventComponent implements OnInit{
     const today = new Date();
     this.selectedDate = today.toLocaleDateString('vi-VN');
 
-    // Gọi API với ngày hôm nay
-    this.visitScheduleService.getByDate(this.selectedDate).subscribe(res => {
-      this.data = res;
-      this.data = this.data.data;
-      this.scheduleList = this.data as ScheduleItem[];
-    });
 
-    // Lắng nghe khi user click ngày khác
-    this.sharedService.dayClicked$.subscribe(selectedDate => {
-      if (selectedDate) {
-        this.selectedDate = selectedDate;
-        this.visitScheduleService.getByDate(this.selectedDate).subscribe(res => {
-          this.data = res;
-          this.data = this.data.data ;
-          this.scheduleList = this.data as ScheduleItem[];
-        });
-      }
-    });
+    this.priestprofilesService.getByUserId(this.authService.getCurrentUser()?.id)
+      .subscribe(res => {
+        this.data = res;
+        if(this.data.data.id != undefined){
+          this.priestId = this.data.data.id;
+
+          if (this.priestId != -1) {
+            this.visitScheduleService.getByDate(this.selectedDate, this.priestId).subscribe(res => {
+              this.data = res;
+              this.data = this.data.data;
+              this.scheduleList = this.data as ScheduleItem[];
+            });
+
+            // Lắng nghe khi user click ngày khác
+            this.sharedService.dayClicked$.subscribe(selectedDate => {
+              if (selectedDate) {
+                this.selectedDate = selectedDate;
+                this.visitScheduleService.getByDate(this.selectedDate, this.priestId).subscribe(res => {
+                  this.data = res;
+                  this.data = this.data.data ;
+                  this.scheduleList = this.data as ScheduleItem[];
+                });
+              }
+            });
+          }
+        }
+      });
+
   }
 
 

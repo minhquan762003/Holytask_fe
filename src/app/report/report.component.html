@@ -3,34 +3,43 @@
   <div class="row mb-4">
     <div class="col-12">
       <h2 class="fw-bold text-primary">
-        <i class="bi bi-file-earmark-bar-graph me-2"></i> Báo cáo tổng hợp
+        <i class="bi bi-clipboard-data me-2"></i> Báo cáo hoạt động mục vụ
       </h2>
     </div>
   </div>
 
-  <!-- Lọc báo cáo -->
+  <!-- Bộ lọc báo cáo -->
   <div class="row mb-4">
-    <div class="col-md-6">
-      <label for="dateRange" class="form-label">Chọn khoảng thời gian</label>
-      <input type="text" class="form-control" id="dateRange" placeholder="Chọn khoảng thời gian">
+    <div class="col-md-4">
+      <label for="dateRange" class="form-label">Khoảng thời gian</label>
+      <input type="text" class="form-control" id="dateRange" placeholder="dd/MM/yyyy - dd/MM/yyyy">
     </div>
-    <div class="col-md-6 d-flex justify-content-end align-items-end">
+    <div class="col-md-4">
+      <label for="activityType" class="form-label">Loại hoạt động</label>
+      <select class="form-select" id="activityType">
+        <option value="">Tất cả</option>
+        <option value="mass">Thánh lễ</option>
+        <option value="visit">Thăm viếng</option>
+        <option value="task">Nhiệm vụ</option>
+      </select>
+    </div>
+    <div class="col-md-4 d-flex justify-content-end align-items-end">
       <button class="btn btn-primary">
-        <i class="bi bi-search me-2"></i> Lọc báo cáo
+        <i class="bi bi-search me-2"></i> Lọc dữ liệu
       </button>
     </div>
   </div>
 
-  <!-- Dữ liệu báo cáo -->
+  <!-- Bảng báo cáo -->
   <div class="row">
     <div class="col-12">
       <table class="table table-striped table-hover align-middle">
         <thead class="table-light">
         <tr>
           <th>#</th>
-          <th>Tên sự kiện</th>
-          <th>Ngày tổ chức</th>
-          <th>Số người tham gia</th>
+          <th>Tên hoạt động</th>
+          <th>Loại</th>
+          <th>Ngày thực hiện</th>
           <th>Trạng thái</th>
           <th class="text-end">Thao tác</th>
         </tr>
@@ -38,9 +47,9 @@
         <tbody>
         <tr>
           <td>1</td>
-          <td>Thánh lễ Chủ nhật</td>
+          <td>Dâng lễ Chúa Nhật</td>
+          <td><span class="badge bg-primary">Thánh lễ</span></td>
           <td>02/04/2025</td>
-          <td>120</td>
           <td><span class="badge bg-success">Hoàn thành</span></td>
           <td class="text-end">
             <button class="btn btn-sm btn-outline-info">
@@ -50,10 +59,10 @@
         </tr>
         <tr>
           <td>2</td>
-          <td>Buổi hội thảo về giáo lý</td>
-          <td>28/03/2025</td>
-          <td>80</td>
-          <td><span class="badge bg-warning">Đang diễn ra</span></td>
+          <td>Thăm bệnh nhân ông A</td>
+          <td><span class="badge bg-secondary">Thăm viếng</span></td>
+          <td>30/03/2025</td>
+          <td><span class="badge bg-warning text-dark">Đang diễn ra</span></td>
           <td class="text-end">
             <button class="btn btn-sm btn-outline-info">
               <i class="bi bi-eye"></i> Xem chi tiết
@@ -62,9 +71,9 @@
         </tr>
         <tr>
           <td>3</td>
-          <td>Khóa học đào tạo mục vụ</td>
-          <td>15/03/2025</td>
-          <td>50</td>
+          <td>Chuẩn bị bài giảng lễ phục sinh</td>
+          <td><span class="badge bg-info text-dark">Nhiệm vụ</span></td>
+          <td>28/03/2025</td>
           <td><span class="badge bg-danger">Chưa hoàn thành</span></td>
           <td class="text-end">
             <button class="btn btn-sm btn-outline-info">
@@ -77,7 +86,7 @@
     </div>
   </div>
 
-  <!-- Tùy chọn tải báo cáo -->
+  <!-- Nút tải báo cáo -->
   <div class="row mt-4">
     <div class="col-12 text-end">
       <button class="btn btn-success">

@@ -1,0 +1,59 @@
+<div class="container mt-4">
+  <h3 class="mb-3 text-center">{{ sharedService.getTranslateService().translate('name.quanlynguoidung') }}</h3>
+
+  <div class="table-responsive">
+    <table class="table table-bordered table-striped align-middle text-center">
+      <thead class="table-dark">
+      <tr>
+        <th>Ảnh</th>
+        <th>Tên đăng nhập</th>
+        <th>Email</th>
+        <th>Vai trò</th>
+        <th>Trạng thái</th>
+        <th>Ngày tạo</th>
+        <th>Cập nhật</th>
+        <th>Hành động</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let user of userList">
+        <td>
+          <img
+            [src]="user.profilePictureUrl"
+            alt="avatar"
+            width="40"
+            height="40"
+            class="rounded-circle"
+          />
+        </td>
+        <td>{{ user.username }}</td>
+        <td>{{ user.email }}</td>
+
+        <!-- Vai trò -->
+        <td>
+          <select class="form-select form-select-sm" [(ngModel)]="user.role">
+            <option *ngFor="let role of roleOptions" [value]="role">{{ role }}</option>
+          </select>
+        </td>
+
+        <!-- Trạng thái -->
+        <td>
+          <select class="form-select form-select-sm" [(ngModel)]="user.isActive">
+            <option [ngValue]="true">Hoạt động</option>
+            <option [ngValue]="false">Vô hiệu hóa</option>
+          </select>
+        </td>
+
+        <td>{{ user.createdAt | date: 'dd/MM/yyyy HH:mm' }}</td>
+        <td>{{ user.updatedAt | date: 'dd/MM/yyyy HH:mm' }}</td>
+
+        <td>
+          <button class="btn btn-sm btn-primary" (click)="updateUser(user)">
+            <i class="bi bi-save"></i> Cập nhật
+          </button>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

@@ -47,9 +47,19 @@ export class VisitscheduleService {
     return this.sharedService.getHttp().delete(`${this.sharedService.getBaseUrl()}/visitSchedule/delete/${idVisit}`,{headers});
   }
 
-  getByDate(dateStr:string){
+  getByDate(dateStr:string, priestId:number){
     const headers = this.createHeaders();
-    return this.sharedService.getHttp().get(`${this.sharedService.getBaseUrl()}/visitSchedule/byDate`, {headers, params:{strDate:dateStr}}, );
+    return this.sharedService.getHttp().get(`${this.sharedService.getBaseUrl()}/visitSchedule/byDate/priestId/${priestId}`, {headers, params:{strDate:dateStr}}, );
+  }
+
+  getById(scheduleId:number){
+    const headers = this.createHeaders();
+    return this.sharedService.getHttp().get(`${this.sharedService.getBaseUrl()}/visitSchedule/scheduleId/${scheduleId}`, {headers});
+  }
+
+  setStatusByScheduleId(scheduleId:number){
+    const headers = this.createHeaders();
+    return this.sharedService.getHttp().put(`${this.sharedService.getBaseUrl()}/visitSchedule/setStatus/${scheduleId}`,null, {headers});
   }
 
 }

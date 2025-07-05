@@ -30,12 +30,14 @@ export class AppComponent implements OnInit{
       this.priestProfiles.setPriestId(priestId);
 
       // ✅ Gọi WebSocket connect sau khi đã có priestId
-      this.webSocketService.connect(priestId);
+      if(priestId!=undefined){
+        this.webSocketService.connect(priestId);
 
-      // Lắng nghe dữ liệu push từ server
-      this.webSocketService.getMessages().subscribe(notification => {
-        this.notificationService.handleNotification(notification);
-      });
+        // Lắng nghe dữ liệu push từ server
+        this.webSocketService.getMessages().subscribe(notification => {
+          this.notificationService.handleNotification(notification);
+        });
+      }
     });
   }
 

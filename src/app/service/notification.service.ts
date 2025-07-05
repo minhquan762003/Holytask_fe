@@ -3,6 +3,8 @@ import {ToastrService} from "ngx-toastr";
 import {SharedService} from "../shared-service.service";
 import {AuthService} from "./auth.service";
 import {HttpHeaders} from "@angular/common/http";
+import {VisitscheduleService} from "./visitschedule.service";
+import {ScheduleItem} from "../model/interface-res";
 
 @Injectable({
   providedIn: 'root'
@@ -11,6 +13,9 @@ export class NotificationService {
   private notified = new Set<number>();
   sharedService = inject(SharedService);
   authService = inject(AuthService);
+  visitScheduleService = inject(VisitscheduleService);
+  foundVisitSchedule:ScheduleItem|undefined;
+  resData:any;
 
   constructor(private toastr: ToastrService) {
   }
@@ -25,7 +30,7 @@ export class NotificationService {
   handleNotification(notification: any): void {
     console.log(notification);
     if (!this.notified.has(notification.scheduleId)) {
-      this.notified.add(notification.scheduleId);
+
 
       this.toastr.info(`🔔 ${notification.message}`, ` ${notification.headline}`, {
         timeOut: 10000,
@@ -37,7 +42,19 @@ export class NotificationService {
       this.sendEmail(notification.scheduleId, this.authService.getCurrentUser()?.email).subscribe(res=>{
         console.log(res);
       })
-      this.confirmNotification(notification.scheduleId);
+      this.visitScheduleService.getById(notification.scheduleId).subscribe(res=>{
+        console.log(res);
+        this.resData = res;
+        this.resData = this.resData.data
+        this.foundVisitSchedule = this.resData as ScheduleItem;
+        //kiểm tra đã done việc hay chưa rồi mới gửi cho backend
+        console.log(this.foundVisitSchedule);
+        if(this.foundVisitSchedule != undefined && (this.foundVisitSchedule.status == 2 ) ){
+          this.notified.add(notification.scheduleId);
+          this.confirmNotification(notification.scheduleId);
+        }
+      });
+
       const audio = new Audio('/assets/notify.mp3');
       audio.play().catch(err => console.warn('Không thể phát âm thanh:', err));
     }

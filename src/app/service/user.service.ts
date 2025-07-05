@@ -2,6 +2,7 @@ import {inject, Injectable} from '@angular/core';
 import {SharedService} from "../shared-service.service";
 import {HttpHeaders} from "@angular/common/http";
 import {AuthService} from "./auth.service";
+import {User} from "../model/interface-res";
 
 @Injectable({
   providedIn: 'root'
@@ -25,5 +26,14 @@ export class UserService {
   getUserById(id:number){
     const headers = this.createHeaders();
     return this.sharedService.getHttp().get(`${this.sharedService.getBaseUrl()}/user/userId/${id}`, {headers})
+  }
+  getAllUser(){
+    const headers = this.createHeaders();
+    return this.sharedService.getHttp().get(`${this.sharedService.getBaseUrl()}/user/getAllUsers`, {headers})
+  }
+  updateUser(user:User){
+    const headers = this.createHeaders();
+    return this.sharedService.getHttp().put(`${this.sharedService.getBaseUrl()}/user/updateUsers`,user, {headers})
+
   }
 }

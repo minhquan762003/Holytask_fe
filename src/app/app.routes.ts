@@ -8,6 +8,7 @@ import {RegisterComponent} from "./register/register.component";
 import {ReportComponent} from "./report/report.component";
 import {PriestProfile} from "./model/priest-profile";
 import {PriestProfileComponent} from "./priest-profile/priest-profile.component";
+import {UserManagerComponent} from "./user-manager/user-manager.component";
 
 
 export const routes: Routes = [
@@ -19,6 +20,7 @@ export const routes: Routes = [
   {path:'register', component:RegisterComponent},
   {path:'report', component:ReportComponent},
   {path:'priestProfile', component:PriestProfileComponent},
+  {path:'usersManager', component:UserManagerComponent},
   {path: '', redirectTo: '/dashboard', pathMatch: 'full'},
 
 ];

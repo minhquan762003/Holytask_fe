@@ -73,7 +73,7 @@ export class ScheduleComponent implements OnInit {
       }
 
       // Filter by status and today's date
-      this.scheduleList = this.scheduleList.filter(item => item.status === 1);
+      this.scheduleList = this.scheduleList.filter(item => item.status === 1 || item.status === 2);
 
       const today = new Date();
       this.scheduleList = this.scheduleList.filter(item => {
@@ -92,19 +92,24 @@ export class ScheduleComponent implements OnInit {
   getBadgeInfo(visitType: string): { label: string; class: string } {
     switch (visitType) {
       case 'SICK':
-        return {label: 'Viếng bệnh', class: 'bg-info text-dark'};
+        return { label: 'Viếng bệnh', class: 'bg-info text-dark' };
       case 'BLESSING':
-        return {label: 'Ban phép lành', class: 'bg-success'};
+        return { label: 'Ban phép lành', class: 'bg-success' };
       case 'CONFESSION':
-        return {label: 'Giải tội', class: 'bg-secondary'};
+        return { label: 'Giải tội', class: 'bg-secondary' };
       case 'CONVENE':
-        return {label: 'Triệu tập', class: 'bg-warning text-dark'};
+        return { label: 'Triệu tập', class: 'bg-warning text-dark' };
       case 'WEDDING':
-        return {label: 'Hôn lễ', class: 'bg-danger'};
+        return { label: 'Hôn lễ', class: 'bg-danger' };
+      case 'FUNERAL':
+        return { label: 'Viếng tang', class: 'bg-dark text-white' };
+      case 'MASS':
+        return { label: 'Thánh lễ', class: 'bg-primary text-white' };
       default:
-        return {label: 'Khác', class: 'bg-dark'};
+        return { label: 'Khác', class: 'bg-light text-dark' };
     }
   }
+
 
   saveSchedule() {
     const datetime = `${this.schedule.date}T${this.schedule.time}:00+07:00`;
@@ -219,6 +224,16 @@ export class ScheduleComponent implements OnInit {
     },error1 => {
       console.log(error1);
     })
+  }
+
+  markAsCompleted(item:ScheduleItem){
+    console.log(item);
+    if(item.id != undefined){
+      this.visitscheduleService.setStatusByScheduleId(item.id).subscribe(res=>{
+        console.log(res);
+        window.location.href = '/schedule';
+      })
+    }
   }
 
 }

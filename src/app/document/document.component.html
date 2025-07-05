@@ -2,10 +2,10 @@
   <div class="d-flex justify-content-between align-items-center mb-4">
     <h4 class="fw-bold mb-0">
       <i class="bi bi-folder2-open text-primary me-2"></i>
-      Tài liệu mục vụ
+      {{ sharedService.getTranslateService().translate('name.tailieumucvu') }}
     </h4>
     <button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#uploadModal">
-      <i class="bi bi-upload me-1"></i> Tải lên
+      <i class="bi bi-upload me-1"></i> {{ sharedService.getTranslateService().translate('button.tailen') }}
     </button>
   </div>
 
@@ -16,11 +16,11 @@
     <table class="table table-hover align-middle">
       <thead class="table-light">
       <tr>
-        <th scope="col"><i class="bi bi-file-earmark-text me-1"></i> Tên tài liệu</th>
-        <th scope="col"><i class="bi bi-tags me-1"></i> Loại</th>
-        <th scope="col"><i class="bi bi-calendar-event me-1"></i> Ngày tải lên</th>
-        <th scope="col"><i class="bi bi-person me-1"></i> Người gửi</th>
-        <th scope="col" class="text-end">Thao tác</th>
+        <th scope="col"><i class="bi bi-file-earmark-text me-1"></i>{{ sharedService.getTranslateService().translate('col.tentailieu') }}</th>
+        <th scope="col"><i class="bi bi-tags me-1"></i>{{ sharedService.getTranslateService().translate('col.loai') }}</th>
+        <th scope="col"><i class="bi bi-calendar-event me-1"></i>{{ sharedService.getTranslateService().translate('col.ngaytailen') }}</th>
+        <th scope="col"><i class="bi bi-person me-1"></i>{{ sharedService.getTranslateService().translate('col.nguoigui') }}</th>
+        <th scope="col" class="text-end">{{ sharedService.getTranslateService().translate('col.thaotac') }}</th>
       </tr>
       </thead>
       <tbody>
@@ -33,7 +33,7 @@
           </span>
         </td>
         <td>{{ doc.createdAt | date: 'dd/MM/yyyy' }}</td>
-        <td>{{ doc.priest?.fullName || 'Không rõ' }}</td>
+        <td>{{ doc.priest.fullName || 'Không rõ' }}</td>
         <td class="text-end">
           <button class="btn btn-sm btn-outline-info me-1" (click)="viewDocument(doc)">
             <i class="bi bi-eye"></i>
@@ -53,7 +53,7 @@
         </td>
       </tr>
       <tr *ngIf="lstDoc.length === 0">
-        <td colspan="5" class="text-center text-muted">Không có tài liệu nào.</td>
+        <td colspan="5" class="text-center text-muted">{{ sharedService.getTranslateService().translate('log.khongcotailieunao') }}</td>
       </tr>
       </tbody>
     </table>
@@ -69,28 +69,28 @@
     <div class="modal-content rounded-4 shadow-sm">
       <div class="modal-header bg-light border-0">
         <h5 class="modal-title fw-bold" id="uploadModalLabel">
-          <i class="bi bi-upload me-2 text-primary"></i> Tải tài liệu mới
+          <i class="bi bi-upload me-2 text-primary"></i>{{ sharedService.getTranslateService().translate('name.taitailieumoi') }}
         </h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
       </div>
 
       <form (ngSubmit)="uploadDocument()" [formGroup]="uploadForm" enctype="multipart/form-data">
         <div class="modal-body">
-          <div class="mb-3 text-danger text-center" *ngIf="selectedType == -1 || !selectedFile">Vui lòng chọn tài liệu và chọn loại tài liệu</div>
+          <div class="mb-3 text-danger text-center" *ngIf="selectedType == -1 || !selectedFile">{{ sharedService.getTranslateService().translate('log.vuilongchontailieuvaloaitailieu') }}</div>
           <!-- File -->
           <div class="mb-3">
-            <label for="file" class="form-label">Chọn tài liệu</label>
+            <label for="file" class="form-label">{{ sharedService.getTranslateService().translate('name.chontailieu') }}</label>
             <input type="file" class="form-control" id="file" (change)="onFileSelected($event)" required />
           </div>
 
           <!-- Type -->
           <div class="mb-3">
-            <label class="form-label">Loại tài liệu</label>
+            <label class="form-label">{{ sharedService.getTranslateService().translate('name.loaitailieu') }}</label>
             <select class="form-select" formControlName="fileType" required (change)="onSelectFileType($event)">
-              <option value=""  disabled hidden selected>Chọn loại</option>
-              <option [value]="1" >Biên bản</option>
-              <option [value]="2">Giáo lý</option>
-              <option [value]="3">Tài liệu khác</option>
+              <option value=""  disabled hidden selected>{{ sharedService.getTranslateService().translate('name.chonloai') }}</option>
+              <option [value]="1" >{{ sharedService.getTranslateService().translate('name.bienban') }}</option>
+              <option [value]="2">{{ sharedService.getTranslateService().translate('name.giaoly') }}<</option>
+              <option [value]="3">{{ sharedService.getTranslateService().translate('name.tailieukhac') }}<</option>
             </select>
           </div>
 

@@ -22,6 +22,9 @@ export class DashboardComponent implements OnInit{
       this.authService.setIsLoggedIn(0);
       window.location.href = '/login';
     }else {
+      if(this.authService.getCurrentUser()?.role == 'ADMIN'){
+        window.location.href = '/usersManager';
+      }
       this.notifyLoginOnce();
     }
   }

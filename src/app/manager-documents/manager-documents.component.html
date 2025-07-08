@@ -1,0 +1,45 @@
+<div class="mb-3">
+  <h3 class="text-center text-primary fw-bold">{{ sharedService.getTranslateService().translate('menu.quanlytailieu') }}</h3>
+</div>
+
+<table class="table table-bordered table-striped table-hover">
+  <thead class="table-dark">
+  <tr>
+    <th>#</th>
+    <th>Tên gốc</th>
+    <th>Loại file</th>
+    <th>Kích thước</th>
+    <th>Người tạo</th>
+    <th>Ngày tạo</th>
+    <th>Mô tả</th>
+    <th>Trạng thái</th>
+    <th>Thao tác</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr *ngFor="let doc of documents; let i = index">
+    <td>{{ i + 1 }}</td>
+    <td>{{ doc.originalFileName }}</td>
+    <td>{{ doc.contentType }}</td>
+    <td>{{ doc.fileSize }} bytes</td>
+    <td>{{ doc.createdUser }}</td>
+    <td>{{ doc.createdAt }}</td>
+    <td>{{ doc.description }}</td>
+
+    <!-- Combo box trạng thái -->
+    <td>
+      <select class="form-select form-select-sm" [(ngModel)]="doc.deleted" (change)="onChangeDeleted(doc)">
+        <option [value]="0">Chưa xóa</option>
+        <option [value]="1">Đã xóa</option>
+      </select>
+    </td>
+
+    <!-- Nút xóa -->
+    <td>
+      <button class="btn btn-sm btn-danger" (click)="deleteDocument(doc)">
+        <i class="bi bi-trash-fill"></i> Xóa
+      </button>
+    </td>
+  </tr>
+  </tbody>
+</table>

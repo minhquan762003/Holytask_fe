@@ -35,7 +35,7 @@ export class PriestprofilesService {
   }
 
   uploadToImgBB(base64Image: string){
-    const url = `https://api.imgbb.com/1/upload?expiration=600&key=${this.imgbbApiKey}`;
+    const url = `https://api.imgbb.com/1/upload?expiration=15552000&key=${this.imgbbApiKey}`;
     const formData = new FormData();
     formData.append('image', base64Image);
     return this.sharedService.getHttp().post(url, formData);

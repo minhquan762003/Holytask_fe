@@ -36,4 +36,9 @@ export class UserService {
     return this.sharedService.getHttp().put(`${this.sharedService.getBaseUrl()}/user/updateUsers`,user, {headers})
 
   }
+
+  resetPass(userId:number, payload:any){
+    const headers = this.createHeaders();
+    return this.sharedService.getHttp().put(`${this.sharedService.getBaseUrl()}/user/resetPassword/${userId}`,payload, {headers})
+  }
 }

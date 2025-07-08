@@ -60,6 +60,10 @@
   "name.giaoly": "Gíao lý",
   "name.tailieukhac": "Tài liệu khác",
   "name.chonloai": "Chọn loại",
-  "name.quanlynguoidung": "Quản lý người dùng"
+  "name.quanlynguoidung": "Quản lý người dùng",
+
+  "menu.quanlytailieu": "Quản lý tài liệu",
+  "menu.quanlygiaoxu": "Quản lý giáo xứ",
+  "menu.quanlygiaoho": "Quản lý giáo họ"
 
 }

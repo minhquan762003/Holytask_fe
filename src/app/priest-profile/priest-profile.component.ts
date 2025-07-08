@@ -8,6 +8,7 @@ import {ParishService} from "../service/parish.service";
 import {SharedModule} from "../shared/shared.module";
 import {ToastrService} from "ngx-toastr";
 import {Parish, PriestProfile, User} from "../model/interface-res";
+import {HttpErrorResponse} from "@angular/common/http";
 
 @Component({
   selector: 'app-priest-profile',
@@ -32,7 +33,7 @@ export class PriestProfileComponent implements OnInit{
   parishData:Parish|undefined;
   parishId:number|undefined;
   lstParish: Parish[] = [];
-
+  error:any = undefined;
   dataEdit: any = {
     fullName: '',
     avatar: '',       // user.profilePictureUrl
@@ -192,5 +193,50 @@ export class PriestProfileComponent implements OnInit{
         progressAnimation: 'increasing',
       }
     );
+  }
+
+
+  passwordData = {
+    oldPassword: '',
+    newPassword: '',
+    confirmPassword: ''
+  };
+
+  passwordMismatch = false;
+
+
+  submitChangePassword(): void {
+    this.passwordMismatch = this.passwordData.newPassword !== this.passwordData.confirmPassword;
+
+    if (this.passwordMismatch) {
+      return;
+    }
+
+    const payload = {
+      oldPassword: this.passwordData.oldPassword,
+      newPassword: this.passwordData.newPassword
+    };
+    this.userId = this.authService.getCurrentUser()?.id;
+    if(this.userId !=undefined){
+      this.userService.resetPass(this.userId,payload).subscribe({
+        next: () => {
+          alert('Đổi mật khẩu thành công!');
+          this.resetPasswordForm();
+        },
+        error: (err ) => {
+          this.error = err;
+          this.error = this.error.error.message;
+        }
+      });
+    }
+  }
+
+  resetPasswordForm(): void {
+    this.passwordData = {
+      oldPassword: '',
+      newPassword: '',
+      confirmPassword: ''
+    };
+    this.passwordMismatch = false;
   }
 }

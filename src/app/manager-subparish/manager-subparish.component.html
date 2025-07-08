@@ -1,0 +1,54 @@
+<div class="mb-3">
+  <h3 class="text-center text-primary fw-bold">
+    <i class="bi bi-diagram-3-fill"></i> Quản lý Giáo họ
+  </h3>
+</div>
+
+<!-- FORM Thêm / Sửa -->
+<div class="card p-3 mb-4">
+  <form (ngSubmit)="onSubmit()" #form="ngForm">
+    <div class="row">
+      <div class="col-md-4 mb-2">
+        <input type="text" [(ngModel)]="currentSubParish.name" name="name" class="form-control" placeholder="Tên giáo họ" required />
+      </div>
+      <div class="col-md-5 mb-2">
+        <select class="form-select" [(ngModel)]="selectedParishId" name="parish" required>
+          <option [ngValue]="null" disabled>-- Chọn giáo xứ --</option>
+          <option *ngFor="let parish of parishes" [ngValue]="parish.id">{{ parish.name }}</option>
+        </select>
+      </div>
+      <div class="col-md-3 mb-2">
+        <button type="submit" class="btn btn-success w-100">
+          {{ currentSubParish.id ? 'Cập nhật' : 'Thêm mới' }}
+        </button>
+      </div>
+    </div>
+  </form>
+</div>
+
+<!-- Danh sách -->
+<table class="table table-bordered table-hover">
+  <thead class="table-dark">
+  <tr>
+    <th>#</th>
+    <th>Tên giáo họ</th>
+    <th>Giáo xứ</th>
+    <th>Thao tác</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr *ngFor="let sub of subParishes; let i = index">
+    <td>{{ i + 1 }}</td>
+    <td>{{ sub.name }}</td>
+    <td>{{ sub.parish.name }}</td>
+    <td>
+      <button class="btn btn-sm btn-primary me-2" (click)="editSubParish(sub)">
+        <i class="bi bi-pencil-square"></i>
+      </button>
+      <button class="btn btn-sm btn-danger" (click)="deleteSubParish(sub)">
+        <i class="bi bi-trash-fill"></i>
+      </button>
+    </td>
+  </tr>
+  </tbody>
+</table>

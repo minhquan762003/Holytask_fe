@@ -54,7 +54,7 @@
 <!--            </li>-->
 
           <li *ngIf="authService.getCurrentUser()?.role == 'ADMIN' ">
-            <a href="#" [routerLink]="['/user-management']" class="nav-link px-0 align-middle btn btn-outline-light"
+            <a href="#" [routerLink]="['/usersManager']" class="nav-link px-0 align-middle btn btn-outline-light"
                style="width: 280px">
               <i class="bi bi-people-fill"></i>
               <span class="ms-1 d-none d-sm-inline">
@@ -62,6 +62,40 @@
     </span>
             </a>
           </li>
+
+          <!-- Quản lý tài liệu -->
+          <li *ngIf="authService.getCurrentUser()?.role == 'ADMIN' ">
+            <a href="#" [routerLink]="['/documentsManager']" class="nav-link px-0 align-middle btn btn-outline-light"
+               style="width: 280px">
+              <i class="bi bi-folder2-open"></i> <!-- biểu tượng thư mục mở -->
+              <span class="ms-1 d-none d-sm-inline">
+      {{ sharedService.getTranslateService().translate('menu.quanlytailieu') }}
+    </span>
+            </a>
+          </li>
+
+          <!-- Quản lý giáo xứ -->
+          <li *ngIf="authService.getCurrentUser()?.role == 'ADMIN' ">
+            <a href="#" [routerLink]="['/parishManager']" class="nav-link px-0 align-middle btn btn-outline-light"
+               style="width: 280px">
+              <i class="bi bi-house-door-fill"></i> <!-- biểu tượng nhà thờ / giáo xứ -->
+              <span class="ms-1 d-none d-sm-inline">
+      {{ sharedService.getTranslateService().translate('menu.quanlygiaoxu') }}
+    </span>
+            </a>
+          </li>
+
+          <!-- Quản lý giáo họ -->
+          <li *ngIf="authService.getCurrentUser()?.role == 'ADMIN' ">
+            <a href="#" [routerLink]="['/subparishManager']" class="nav-link px-0 align-middle btn btn-outline-light"
+               style="width: 280px">
+              <i class="bi bi-diagram-3-fill"></i> <!-- biểu tượng phân nhánh/nhóm -->
+              <span class="ms-1 d-none d-sm-inline">
+      {{ sharedService.getTranslateService().translate('menu.quanlygiaoho') }}
+    </span>
+            </a>
+          </li>
+
 
 
 

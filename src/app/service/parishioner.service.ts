@@ -44,4 +44,15 @@ export class ParishionerService {
     const headers = this.createHeaders();
     return this.sharedService.getHttp().delete(`${this.sharedService.getBaseUrl()}/parishionerProfile/delete/${id}`, {headers});
   }
+
+  getByParishIdOrderByViewDate(parishId:number){
+    const headers = this.createHeaders();
+    return this.sharedService.getHttp().get(`${this.sharedService.getBaseUrl()}/parishionerProfile/orderByViewDate/${parishId}`, {headers});
+  }
+
+  setViewDate(parishionerId:number){
+    const headers = this.createHeaders();
+    return this.sharedService.getHttp().put(`${this.sharedService.getBaseUrl()}/parishionerProfile/setViewDate/${parishionerId}`, null,{headers});
+  }
+
 }

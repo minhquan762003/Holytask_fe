@@ -217,6 +217,9 @@ export class ParishionerTabComponent implements OnInit{
 // CRUD
   viewDetail(person:ParishionerProfile){
     this.selectedParishioner = person;
+    this.parishionerService.setViewDate(person.id).subscribe(res=>{
+      console.log(res);
+    })
   }
   editPerson(person:ParishionerProfile){
     this.personId = person.id;

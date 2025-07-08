@@ -9,6 +9,9 @@ import {ReportComponent} from "./report/report.component";
 import {PriestProfile} from "./model/priest-profile";
 import {PriestProfileComponent} from "./priest-profile/priest-profile.component";
 import {UserManagerComponent} from "./user-manager/user-manager.component";
+import {ManagerDocumentsComponent} from "./manager-documents/manager-documents.component";
+import {ManagerParishComponent} from "./manager-parish/manager-parish.component";
+import {ManagerSubparishComponent} from "./manager-subparish/manager-subparish.component";
 
 
 export const routes: Routes = [
@@ -21,6 +24,9 @@ export const routes: Routes = [
   {path:'report', component:ReportComponent},
   {path:'priestProfile', component:PriestProfileComponent},
   {path:'usersManager', component:UserManagerComponent},
+  {path:'documentsManager', component:ManagerDocumentsComponent},
+  {path:'parishManager', component: ManagerParishComponent},
+  {path: 'subparishManager', component: ManagerSubparishComponent},
   {path: '', redirectTo: '/dashboard', pathMatch: 'full'},
 
 ];

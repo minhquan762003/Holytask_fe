@@ -35,7 +35,9 @@
       </div>
 
       <div class="mt-4 d-flex justify-content-end gap-2">
-        <button class="btn btn-outline-secondary">Đổi mật khẩu</button>
+        <button class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#changePasswordModal">
+          Đổi mật khẩu
+        </button>
       </div>
     </div>
   </div>
@@ -168,6 +170,50 @@
     </div>
   </div>
 </form>
+
+
+<!-- Modal cập nhật mật khẩu -->
+<div class="modal fade" id="changePasswordModal" tabindex="-1" aria-labelledby="changePasswordModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content rounded-4 shadow">
+      <div class="error alert alert-danger mt-3 text-center" *ngIf="error">
+        {{ error }}
+      </div>
+      <div class="modal-header">
+        <h5 class="modal-title" id="changePasswordModalLabel">Cập nhật mật khẩu</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
+      </div>
+      <div class="modal-body">
+        <form #passwordForm="ngForm" (ngSubmit)="submitChangePassword()">
+          <div class="mb-3">
+            <label for="oldPassword" class="form-label">Mật khẩu cũ</label>
+            <input type="password" id="oldPassword" name="oldPassword" class="form-control"
+                   [(ngModel)]="passwordData.oldPassword" required>
+          </div>
+          <div class="mb-3">
+            <label for="newPassword" class="form-label">Mật khẩu mới</label>
+            <input type="password" id="newPassword" name="newPassword" class="form-control"
+                   [(ngModel)]="passwordData.newPassword" required minlength="8">
+          </div>
+          <div class="mb-3">
+            <label for="confirmPassword" class="form-label">Xác nhận mật khẩu mới</label>
+            <input type="password" id="confirmPassword" name="confirmPassword" class="form-control"
+                   [(ngModel)]="passwordData.confirmPassword" required>
+          </div>
+          <div *ngIf="passwordMismatch" class="text-danger small mb-2">
+            Mật khẩu xác nhận không khớp
+          </div>
+          <div class="d-flex justify-content-end">
+            <button type="submit" class="btn btn-primary"
+                    [disabled]="!passwordForm.form.valid || passwordMismatch">Cập nhật
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
 
 
 

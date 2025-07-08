@@ -90,6 +90,7 @@ export interface ParishionerProfile{
   createdUser:string,
   createdAt?: string;
   updatedAt?: string;
+  viewDate:string;
 }
 
 export interface Documents {

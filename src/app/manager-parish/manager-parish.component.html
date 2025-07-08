@@ -1,0 +1,55 @@
+<div class="mb-3">
+  <h3 class="text-center text-primary fw-bold">
+    <i class="bi bi-building"></i> Quản lý Giáo xứ
+  </h3>
+</div>
+
+<!-- FORM Thêm / Sửa -->
+<div class="card p-3 mb-4">
+  <form (ngSubmit)="onSubmit()" #parishForm="ngForm">
+    <div class="row">
+      <div class="col-md-5 mb-2">
+        <input type="text" [(ngModel)]="currentParish.name" name="name" class="form-control" placeholder="Tên giáo xứ" required>
+      </div>
+      <div class="col-md-5 mb-2">
+        <input type="text" [(ngModel)]="currentParish.location" name="location" class="form-control" placeholder="Địa chỉ" required>
+      </div>
+      <div class="col-md-2 mb-2 text-end">
+        <button type="submit" class="btn btn-success w-100">
+          {{ currentParish.id ? 'Cập nhật' : 'Thêm mới' }}
+        </button>
+      </div>
+    </div>
+  </form>
+</div>
+
+<!-- Bảng danh sách giáo xứ -->
+<table class="table table-bordered table-hover">
+  <thead class="table-dark">
+  <tr>
+    <th>#</th>
+    <th>Tên giáo xứ</th>
+    <th>Địa chỉ</th>
+    <th>Ngày tạo</th>
+    <th>Ngày cập nhật</th>
+    <th>Thao tác</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr *ngFor="let parish of parishes; let i = index">
+    <td>{{ i + 1 }}</td>
+    <td>{{ parish.name }}</td>
+    <td>{{ parish.location }}</td>
+    <td>{{ parish.createdAt }}</td>
+    <td>{{ parish.updatedAt }}</td>
+    <td>
+      <button class="btn btn-sm btn-primary me-2" (click)="editParish(parish)">
+        <i class="bi bi-pencil-square"></i>
+      </button>
+      <button class="btn btn-sm btn-danger" (click)="deleteParish(parish)">
+        <i class="bi bi-trash-fill"></i>
+      </button>
+    </td>
+  </tr>
+  </tbody>
+</table>

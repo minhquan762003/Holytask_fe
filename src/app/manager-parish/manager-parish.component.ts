@@ -1,7 +1,9 @@
-import {Component, inject} from '@angular/core';
+import {Component, inject, OnInit} from '@angular/core';
 import {SharedModule} from "../shared/shared.module";
 import {SharedService} from "../shared-service.service";
 import {Parish} from "../model/interface-res";
+import {ParishService} from "../service/parish.service";
+import {ManagerParishService} from "../service/manager-parish.service";
 
 @Component({
   selector: 'app-manager-parish',
@@ -10,30 +12,37 @@ import {Parish} from "../model/interface-res";
   templateUrl: './manager-parish.component.html',
   styleUrl: './manager-parish.component.css'
 })
-export class ManagerParishComponent {
+export class ManagerParishComponent implements OnInit{
   sharedService = inject(SharedService);
-  parishes: Parish[] = [];
+  lstParish: Parish[] = [];
   currentParish: Parish = this.getEmptyParish();
   nextId = 1;
+  parishService = inject(ParishService);
+  dataRes:any;
+  currentPage = 1;
+
+
+  parish: Parish = {
+    id: null,
+    name: '',
+    location: '',
+    createdUser: '',
+    updatedUser: '',
+    isSelected: 0
+  };
+  managerParishService = inject(ManagerParishService);
+  error:any;
 
   ngOnInit(): void {
-    // Khởi tạo dữ liệu test
-    this.parishes = [
-      {
-        id: 1,
-        name: 'Giáo xứ Tân Bình',
-        location: 'Quận Tân Bình, TP.HCM',
-        createdAt: '2025-07-01',
-        updatedAt: '2025-07-01'
-      },
-      {
-        id: 2,
-        name: 'Giáo xứ Phú Nhuận',
-        location: 'Quận Phú Nhuận, TP.HCM',
-        createdAt: '2025-07-02',
-        updatedAt: '2025-07-02'
-      }
-    ];
+    this.parishService.findAllParish().subscribe(res=>{
+      this.dataRes = res;
+      console.log(this.dataRes);
+      this.dataRes = this.dataRes.data;
+      this.lstParish = this.dataRes as Parish[];
+      console.log(this.lstParish)
+    },error => {
+
+    });
     this.nextId = 3;
   }
 
@@ -43,7 +52,10 @@ export class ManagerParishComponent {
       name: '',
       location: '',
       createdAt: '',
-      updatedAt: ''
+      updatedAt: '',
+      createdUser:'',
+      updatedUser:'',
+      isSelected:-1
     };
   }
 
@@ -55,27 +67,71 @@ export class ManagerParishComponent {
       this.currentParish.id = this.nextId++;
       this.currentParish.createdAt = now;
       this.currentParish.updatedAt = now;
-      this.parishes.push({ ...this.currentParish });
+      this.lstParish.push({ ...this.currentParish });
     } else {
       // Cập nhật
-      const index = this.parishes.findIndex(p => p.id === this.currentParish.id);
+      const index = this.lstParish.findIndex(p => p.id === this.currentParish.id);
       if (index !== -1) {
         this.currentParish.updatedAt = now;
-        this.parishes[index] = { ...this.currentParish };
+        this.lstParish[index] = { ...this.currentParish };
       }
     }
 
     this.currentParish = this.getEmptyParish();
   }
 
-  editParish(parish: Parish): void {
-    this.currentParish = { ...parish };
+  selecteParish(parish: Parish): void {
+    this.parish = parish;
   }
 
   deleteParish(parish: Parish): void {
-    if (confirm(`Bạn có chắc muốn xóa giáo xứ "${parish.name}"?`)) {
-      this.parishes = this.parishes.filter(p => p.id !== parish.id);
+    if(parish.id != null){
+      this.managerParishService.deleteParish(parish).subscribe(res=>{
+        console.log(res);
+        window.location.href = '/parishManager';
+      }, error => {
+        console.log(error);
+        this.dataRes = error;
+        this.dataRes = this.dataRes.error.message;
+        console.log(error);
+        this.error = this.dataRes;
+        console.log(this.dataRes);
+      })
     }
   }
 
+
+  submitParish(parish:Parish){
+    console.log(parish.id);
+    if(parish.id == null){
+      this.managerParishService.addParish(parish).subscribe(res=>{
+        console.log(res);
+        window.location.href = '/parishManager';
+      },error => {
+        console.log(error);
+        this.error = error;
+        this.error = this.error.data.message;
+      })
+    }else {
+      this.managerParishService.updateParish(parish).subscribe(res =>{
+        console.log(res);
+        window.location.href = '/parishManager';
+      },error=>{
+        this.error = error;
+        this.error = this.error.data.message;
+      })
+    }
+
+  }
+
+  resetInput(){
+    this.parish = {
+      id: null,
+      name: '',
+      location: '',
+      createdUser: '',
+      updatedUser: '',
+      isSelected: 0
+    }
+  }
 }

@@ -64,6 +64,11 @@
 
   "menu.quanlytailieu": "Quản lý tài liệu",
   "menu.quanlygiaoxu": "Quản lý giáo xứ",
-  "menu.quanlygiaoho": "Quản lý giáo họ"
+  "menu.quanlygiaoho": "Quản lý giáo họ",
+
+  "button.themmoi": "Thêm mới",
+
+  "label.giaoxu.batbuoc": "Tên giáo xứ là bắt buộc",
+  "label.diadiemgiaoxu.batbuoc" : "Địa chỉ là bắt buộc"
 
 }

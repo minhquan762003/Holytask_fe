@@ -31,6 +31,9 @@ export class ScheduleComponent implements OnInit {
   scheduleList: ScheduleItem[] = [];
   currentPage = 1;
   now = new Date();
+  dataRes:any;
+  endTime: string = '';
+  status:any;
   tz7 = new Date(this.now.getTime() - this.now.getTimezoneOffset()*60000 + 7*3600000);
   idVisit: number = -1;
   schedule: any = {
@@ -39,14 +42,18 @@ export class ScheduleComponent implements OnInit {
     visitType: '-1',
     address: '',
     notes: '',
-    headline: ''
+    headline: '',
+    durationMinutes:5
   };
   dataEdit: any;
+  errorMess:any;
+  visitScheduleErr:ScheduleItem |undefined;
 
   ngOnInit(): void {
     this.getPriestProfilesByUserId();
-
+    this.updateEndTime();
   }
+
 
   constructor() {
   }
@@ -121,7 +128,8 @@ export class ScheduleComponent implements OnInit {
       address: this.schedule.address,
       createdUser: this.authService.getCurrentUser()?.username,
       notes: this.schedule.notes,
-      headline: this.schedule.headline
+      headline: this.schedule.headline,
+      durationMinutes:this.schedule.durationMinutes
     };
 
     if (this.idVisit == -1) {
@@ -133,7 +141,15 @@ export class ScheduleComponent implements OnInit {
           window.location.href = '/schedule';
         }
       }, error => {
-        this.error = 1;
+        this.dataRes = error;
+        this.status = this.dataRes.error.message;
+        this.visitScheduleErr = this.dataRes.error.data;
+        console.log(this.visitScheduleErr);
+        if(this.status =='TIME_ERROR'){
+          this.errorMess = 'Đã có công việc ' + this.visitScheduleErr?.headline + ' đang thực hiện trong thời gian này';
+        }
+        // this.error = this.dataRes;
+        // console.log(this.dataRes);
       });
     } else {
       console.log(datamodel);
@@ -188,21 +204,40 @@ export class ScheduleComponent implements OnInit {
 
   edit(id: number) {
     this.idVisit = id;
+
     this.visitscheduleService.getByIdVisit(this.idVisit).subscribe(res => {
       this.dataEdit = res;
-      const dt = new Date(this.dataEdit.data.datetime)
+
+      const dt = new Date(this.dataEdit.data.datetime);
+
+      // Xử lý múi giờ GMT+7 thủ công
+      const utcHour = dt.getUTCHours();
+      const utcMin = dt.getUTCMinutes();
+
+      let hoursVN = utcHour + 7;
+      if (hoursVN >= 24) hoursVN -= 24;
+
+      const timeVN = `${hoursVN.toString().padStart(2, '0')}:${utcMin.toString().padStart(2, '0')}`;
+
       this.schedule.date = dt.toISOString().substring(0, 10);
-      this.schedule.time = dt.toTimeString().substring(0, 5);
+      this.schedule.time = timeVN;
       this.schedule.headline = this.dataEdit.data.headline;
       this.schedule.address = this.dataEdit.data.address;
       this.schedule.notes = this.dataEdit.data.notes;
       this.schedule.visitType = this.dataEdit.data.visitType;
+      this.schedule.durationMinutes = this.dataEdit.data.durationMinutes;
+
+      // ✅ Sau khi đã set time và duration, mới gọi updateEndTime
+      this.updateEndTime();
     }, error1 => {
-      console.log(error1)
+      console.log(error1);
     });
   }
 
+
   resetInputAddSchedule() {
+    this.now = new Date(); // Cập nhật lại "bây giờ" lúc người dùng mở modal
+
     this.idVisit = -1;
     this.schedule.headline = '';
     this.schedule.notes = '';
@@ -210,7 +245,11 @@ export class ScheduleComponent implements OnInit {
     this.schedule.visitType = '-1';
     this.schedule.date = this.now.toISOString().substring(0, 10);
     this.schedule.time = this.now.toTimeString().substring(0, 5);
+    this.schedule.durationMinutes = 5;
+
+    this.validateDateTime1(); // Gọi lại để update thời gian kết thúc đúng
   }
+
   dataDelete:any;
   delete(id:number){
     this.visitscheduleService.deleteVisitSchedule(id).subscribe(res=>{
@@ -235,5 +274,40 @@ export class ScheduleComponent implements OnInit {
       })
     }
   }
+
+  validateDateTime1(): void {
+    this.updateEndTime();
+  }
+  updateEndTime(): void {
+    if (!this.schedule.date || !this.schedule.time || !this.schedule.durationMinutes || this.schedule.durationMinutes < 5) {
+      this.endTime = '';
+      return;
+    }
+
+    const [year, month, day] = this.schedule.date.split('-').map(Number);
+    const [hour, minute] = this.schedule.time.split(':').map(Number);
+
+    // Tạo thời gian UTC (không lệch múi giờ)
+    // Nhưng vì lịch của bạn theo GMT+7 nên trừ 7 tiếng để lấy giờ UTC
+    const startDateUtc = Date.UTC(year, month - 1, day, hour - 7, minute, 0, 0);
+    if (isNaN(startDateUtc)) {
+      this.endTime = '';
+      return;
+    }
+
+    const endDateUtc = new Date(startDateUtc + this.schedule.durationMinutes * 60 * 1000);
+
+    // Chuyển lại giờ theo GMT+7
+    const endHours = endDateUtc.getUTCHours() + 7;
+    const endMinutes = endDateUtc.getUTCMinutes();
+
+    // Xử lý tràn giờ
+    const adjustedHours = (endHours >= 24) ? endHours - 24 : endHours;
+
+    this.endTime = `${adjustedHours.toString().padStart(2, '0')}:${endMinutes.toString().padStart(2, '0')}`;
+  }
+
+
+
 
 }

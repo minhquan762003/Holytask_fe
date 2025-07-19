@@ -28,11 +28,14 @@ export interface ScheduleItem {
 }
 
 export interface Parish {
-  id: number;
+  id: number|null;
   name: string;
   location: string;
   createdAt?: string;
   updatedAt?: string;
+  createdUser:string;
+  updatedUser:string;
+  isSelected:number;
 }
 
 

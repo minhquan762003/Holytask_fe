@@ -25,7 +25,7 @@ export class EventComponent implements OnInit{
   priestId:number = -1;
 
   currentPage = 1;
-  itemsPerPage = 3;
+  itemsPerPage = 5;
 
   get totalPages(): number {
     return Math.ceil(this.scheduleList.length / this.itemsPerPage);

@@ -235,7 +235,10 @@ export class ParishionerTabComponent implements OnInit{
     this.parishioners.phoneNumber = person.phoneNumber;
     this.parishioners.imgUrl = person.imgUrl;
     this.parishioners.parishGroupId = person.parishGroup.id;
-    this.parishioners.subParishId = person.subParish.id;
+    if(this.parishioners.subParishId != null){
+
+      this.parishioners.subParishId = person.subParish.id;
+    }
   }
 
   deletePerson(person:ParishionerProfile){

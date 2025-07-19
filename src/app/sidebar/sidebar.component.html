@@ -75,7 +75,7 @@
           </li>
 
           <!-- Quản lý giáo xứ -->
-          <li *ngIf="authService.getCurrentUser()?.role == 'ADMIN' ">
+          <li *ngIf="authService.getCurrentUser()?.role == 'PRIEST' ">
             <a href="#" [routerLink]="['/parishManager']" class="nav-link px-0 align-middle btn btn-outline-light"
                style="width: 280px">
               <i class="bi bi-house-door-fill"></i> <!-- biểu tượng nhà thờ / giáo xứ -->
@@ -86,7 +86,7 @@
           </li>
 
           <!-- Quản lý giáo họ -->
-          <li *ngIf="authService.getCurrentUser()?.role == 'ADMIN' ">
+          <li *ngIf="authService.getCurrentUser()?.role == 'PRIEST' ">
             <a href="#" [routerLink]="['/subparishManager']" class="nav-link px-0 align-middle btn btn-outline-light"
                style="width: 280px">
               <i class="bi bi-diagram-3-fill"></i> <!-- biểu tượng phân nhánh/nhóm -->

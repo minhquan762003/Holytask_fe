@@ -68,11 +68,11 @@
   <div class="modal fade" id="addScheduleModal" tabindex="-1" aria-labelledby="addScheduleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content rounded-4 shadow">
-        <div *ngIf="error == 1"
-             class="error alert alert-danger mt-3 text-center"> {{ sharedService.getTranslateService().translate('error.text.taolichkhongthanhcong') }}
-        </div>
-        <div *ngIf="error == 0"
-             class="error alert alert-success mt-3 text-center"> {{ sharedService.getTranslateService().translate('success.text.taolichthanhcong') }}
+<!--        <div *ngIf="error == 1"-->
+<!--             class="error alert alert-danger mt-3 text-center"> {{ sharedService.getTranslateService().translate('error.text.taolichkhongthanhcong') }}-->
+<!--        </div>-->
+        <div *ngIf="errorMess "
+             class="error alert alert-danger mt-3 text-center"> {{ errorMess }}
         </div>
         <div class="modal-header">
           <h5 class="modal-title fw-bold" id="addScheduleModalLabel">Thêm lịch trình mới</h5>
@@ -82,7 +82,7 @@
             <div class="mb-4">
               <label for="eventDate" class="form-label">Ngày</label>
               <input type="date" class="form-control" id="eventDate" [(ngModel)]="schedule.date" name="eventDate"
-                     (ngModelChange)="validateDateTime()" required #eventDateRef="ngModel">
+                     (ngModelChange)="validateDateTime()" required #eventDateRef="ngModel" [disabled]="idVisit != -1">
               <div *ngIf="eventDateRef.invalid && eventDateRef.touched && eventDateRef.errors?.['required']"
                    class="text-danger  text-center">
                 {{ sharedService.getTranslateService().translate('label.date.batbuoc') }}
@@ -95,7 +95,7 @@
             <div class="mb-4">
               <label for="eventTime" class="form-label">Thời gian</label>
               <input type="time" class="form-control" id="eventTime" [(ngModel)]="schedule.time"
-                     (ngModelChange)="validateDateTime()" name="eventTime" required #evemtTimeRef="ngModel">
+                     (ngModelChange)="validateDateTime1()" name="eventTime" required #evemtTimeRef="ngModel" [disabled]="idVisit != -1">
               <div *ngIf="evemtTimeRef.invalid && evemtTimeRef.touched && evemtTimeRef.errors?.['required']"
                    class="text-danger  text-center">
                 {{ sharedService.getTranslateService().translate('label.time.batbuoc') }}
@@ -104,7 +104,41 @@
                 {{ timeError }}
               </div>
             </div>
-            <div class="mb-3">
+          <div class="mb-3">
+            <label for="durationTime" class="form-label">Thời gian thực hiện</label>
+            <input type="number"
+                   class="form-control"
+                   id="durationTime"
+                   [(ngModel)]="schedule.durationMinutes"
+                   (ngModelChange)="updateEndTime()"
+                   name="durationTime"
+                   #durationRef="ngModel"
+                   required
+                   min="5" [disabled]="idVisit != -1">
+            <!-- Lỗi: không nhập gì -->
+            <div *ngIf="durationRef.invalid && durationRef.touched && durationRef.errors?.['required']"
+                 class="text-danger text-center">
+              Vui lòng nhập thời gian thực hiện công việc.
+            </div>
+
+            <!-- Lỗi: nhỏ hơn 5 -->
+            <div *ngIf="durationRef.invalid && durationRef.touched && durationRef.errors?.['min']"
+                 class="text-danger text-center">
+              Thời gian thực hiện công việc tối thiểu là 5 phút.
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label for="endTime" class="form-label">Thời gian kết thúc</label>
+            <input type="time"
+                   class="form-control"
+                   id="endTime"
+                   [value]="endTime"
+                   disabled>
+          </div>
+
+
+          <div class="mb-3">
               <label for="headline" class="form-label">Tiêu đề</label>
               <input type="text" class="form-control" id="headline" [(ngModel)]="schedule.headline" name="eventTitle"
                      #eventTitleRef="ngModel"
@@ -158,7 +192,7 @@
           <button
             type="button"
             class="btn btn-primary"
-            (click)="saveSchedule()" [disabled]="addScheduleForm.invalid ||timeError || dateError">
+            (click)="saveSchedule()" [disabled]="addScheduleForm.invalid ||timeError || dateError || schedule.durationMinutes < 5">
             Lưu
           </button>
 

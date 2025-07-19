@@ -1,55 +1,71 @@
+<div *ngIf="scheduleList.length > 0">
+  <h2 class="mb-4">Sự kiện ngày {{ selectedDate }}</h2>
 
+  <div class="table-responsive">
+    <table class="table table-hover table-bordered align-middle rounded-4 shadow-sm">
+      <thead class="table-light">
+      <tr>
+        <th scope="col">STT</th>
+        <th scope="col">Tiêu đề</th>
+        <th scope="col">Địa chỉ</th>
+        <th scope="col">Thời gian</th>
+        <th scope="col">Trạng thái</th>
+      </tr>
+      </thead>
 
-<div *ngIf="scheduleList.length>0">
-  <h2>Sự kiện ngày {{selectedDate}}</h2>
-  <div class="d-flex flex-wrap gap-3 mt-3">
-    <div
-      class="card shadow-sm rounded-4 p-3 border-0 "
-      style="width: 18rem;"
-      *ngFor="let schedule of paginatedItems"
-    >
-      <div class="d-flex justify-content-between align-items-start mb-2">
-        <h6 class="fw-semibold mb-0">{{ schedule.headline }}</h6>
-        <button class="btn btn-light btn-sm rounded-circle shadow-sm">
-          <i class="bi bi-plus-circle-fill text-primary"></i>
-        </button>
-      </div>
-      <p class="text-muted mb-0">{{ schedule.address }}</p>
-    </div>
+      <tbody>
+      <tr *ngFor="let schedule of paginatedItems; let i = index">
+        <td>{{ (currentPage - 1) * itemsPerPage + i + 1 }}</td> <!-- STT -->
+        <td>{{ schedule.headline }}</td>
+        <td>{{ schedule.address }}</td>
+        <td>{{ schedule.datetime | date: 'HH:mm:ss dd/MM/yyyy' }}</td>
+        <td>
+      <span
+        [ngClass]="{
+          'text-muted': schedule.status === 0,
+          'text-primary': schedule.status === 1,
+          'text-success': schedule.status === 2
+        }"
+      >
+        {{
+          schedule.status === 0
+            ? 'Ngừng hoạt động'
+            : schedule.status === 1
+              ? 'Đang hoạt động'
+              : 'Đã hoàn thành'
+        }}
+      </span>
+        </td>
+      </tr>
+      </tbody>
+
+    </table>
   </div>
 
   <!-- Pagination -->
-  <nav class="mt-4">
-    <ul class="pagination">
+  <nav class="mt-3">
+    <ul class="pagination justify-content-center">
       <li class="page-item" [class.disabled]="currentPage === 1">
-        <button class="page-link" (click)="changePage(currentPage - 1)">{{ sharedService.getTranslateService().translate('lable.truoc') }}</button>
+        <button class="page-link" (click)="changePage(currentPage - 1)">
+          {{ sharedService.getTranslateService().translate('lable.truoc') }}
+        </button>
       </li>
 
-      <li
-        class="page-item"
-        *ngFor="let page of totalPagesArray"
-        [class.active]="page === currentPage"
-      >
+      <li class="page-item" *ngFor="let page of totalPagesArray" [class.active]="page === currentPage">
         <button class="page-link" (click)="changePage(page)">{{ page }}</button>
       </li>
 
       <li class="page-item" [class.disabled]="currentPage === totalPages">
-        <button class="page-link" (click)="changePage(currentPage + 1)">{{ sharedService.getTranslateService().translate('lable.sau') }}</button>
+        <button class="page-link" (click)="changePage(currentPage + 1)">
+          {{ sharedService.getTranslateService().translate('lable.sau') }}
+        </button>
       </li>
     </ul>
   </nav>
 </div>
 
-<div *ngIf="scheduleList.length<=0">
-
-  <div
-    class="card shadow-sm rounded-4 p-3 border-0 "
-    style="width: 18rem;"
-  >
-    <div class="d-flex justify-content-between align-items-start mb-2">
-      <h5 class="text-success">{{ sharedService.getTranslateService().translate('log.khongcolichnaotrongngay') }} {{selectedDate}}</h5>
-
-    </div>
-
-  </div>
+<div *ngIf="scheduleList.length <= 0" class="text-center mt-5">
+  <h5 class="text-success">
+    {{ sharedService.getTranslateService().translate('log.khongcolichnaotrongngay') }} {{ selectedDate }}
+  </h5>
 </div>
